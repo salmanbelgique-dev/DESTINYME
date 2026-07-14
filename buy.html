@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destiny Rewards - Buy</title>
+  <meta name="description" content="Destiny Rewards Buy Page">
+  <!-- Google Fonts: Montserrat Heavy Italic & Bangers -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=League+Spartan:wght@700;800;900&family=Montserrat:ital,wght@1,900&display=swap"
+    rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css?v=113">
+  <style>
+    /* Critical layout properties for immediate rendering on load (prevents FOUC/jumping) */
+    :root {
+      --logo-size: 96px;
+      --logo-target-left: 24px;
+      --logo-target-top: 16px;
+      --logo-expanded-width: 270px;
+      --logo-text-width: 160px;
+    }
+    @media (max-width: 768px) {
+      :root {
+        --logo-size: 72px;
+        --logo-target-left: 16px;
+        --logo-target-top: 12px;
+        --logo-expanded-width: 210px;
+        --logo-text-width: 120px;
+      }
+    }
+    .brand-logo-glass-container {
+      position: fixed !important;
+      top: var(--logo-target-top) !important;
+      left: var(--logo-target-left) !important;
+      width: var(--logo-expanded-width) !important;
+      height: var(--logo-size) !important;
+      transform: translate(0, 0) scale(0.85) !important;
+      animation: none !important;
+    }
+    .brand-logo-text {
+      animation: none !important;
+      opacity: 1 !important;
+      width: var(--logo-text-width) !important;
+      transform: translateX(0) !important;
+    }
+    #sticky-nav {
+      position: fixed !important;
+      top: calc(var(--logo-target-top) + (var(--logo-size) - 54px) / 2) !important;
+      right: var(--logo-target-left) !important;
+      transform: translateX(0) scale(0.85) !important;
+      opacity: 1 !important;
+      transition: none !important;
+    }
+    @media (max-width: 768px) {
+      #sticky-nav {
+        top: calc(var(--logo-target-top) + (var(--logo-size) - 38px) / 2) !important;
+      }
+    }
+  </style>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Import Map for Firebase Modules -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+        "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"
+      }
+    }
+  </script>
+  <!-- Firebase Initialization -->
+  <script src="firebase.js?v=105" type="module"></script>
+  <!-- JavaScript -->
+  <script src="script.js?v=105" defer></script>
+</head>
+
+<body class="buy-page-body">
+
+  <!-- Animated Glass Liquid Logo Container (Settle State) -->
+  <div class="brand-logo-glass-container" onclick="window.location.href='index.html';" style="animation: none; transform: translate(0, 0) scale(0.85); top: var(--logo-target-top); left: var(--logo-target-left); cursor: pointer;">
+    <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="brand-logo-img">
+    <div class="brand-logo-text">
+      <div class="text-destiny">DESTINY</div>
+      <div class="text-rewards">REWARDS</div>
+    </div>
+  </div>
+
+  <!-- Sticky Liquid Glass Navigation Bar (Visible State) -->
+  <nav id="sticky-nav" class="visible">
+    <div class="nav-sliding-bubble" id="nav-sliding-bubble"></div>
+    <ul class="sticky-nav-links">
+      <li>
+        <a href="index.html" class="sticky-nav-link">
+          <svg class="nav-home-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2.09c-.55 0-1.05.28-1.38.73L2.38 11.06c-.5.5-.14 1.36.57 1.36H5v6.5c0 1.1.9 2 2 2h3v-5c0-1.1.9-2 2-2s2 .9 2 2v5h3c1.1 0 2-.9 2-2v-6.5h2.05c.71 0 1.07-.86.57-1.36L13.38 2.82C13.05 2.37 12.55 2.09 12 2.09z" />
+          </svg>
+          HOME
+        </a>
+      </li>
+      <li>
+        <a href="buy.html" class="sticky-nav-link" id="nav-buy-link">
+          <img src="images/buy_icon_white_dollar.png" alt="Buy" class="nav-buy-icon">
+          BUY
+        </a>
+      </li>
+      <li>
+        <a href="challenge.html" class="sticky-nav-link" id="nav-challenge-link">
+          <svg class="nav-spin-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Wheel circle background -->
+            <circle cx="50" cy="48" r="40" fill="#6B8AFF" />
+            <!-- Wheel segments (white cuts) -->
+            <path d="M50 8 L50 48 L82 20Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M90 48 L50 48 L78 76Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M50 88 L50 48 L22 76Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M10 48 L50 48 L18 20Z" fill="rgba(255,255,255,0.92)" />
+            <!-- Center hub -->
+            <circle cx="50" cy="48" r="6" fill="#6B8AFF" stroke="rgba(255,255,255,0.92)" stroke-width="3" />
+            <!-- Pointer/flapper on left -->
+            <circle cx="12" cy="40" r="5" fill="rgba(255,255,255,0.92)" />
+            <!-- Stand/pedestal -->
+            <rect x="44" y="86" width="12" height="14" rx="2" fill="#6B8AFF" />
+            <path d="M32 100 Q50 95 68 100 L68 108 Q50 103 32 108Z" fill="#6B8AFF" />
+          </svg>
+          CHALLENGE
+        </a>
+      </li>
+      <li>
+        <a href="index.html#second-layer" class="sticky-nav-link" id="nav-bid-link">
+          <img src="images/lock_cropped.png" alt="Lock" class="nav-lock-icon">
+          BID
+        </a>
+      </li>
+      <li>
+        <a href="index.html#second-layer" class="sticky-nav-link" id="nav-free-link">
+          <img src="images/lock_cropped.png" alt="Lock" class="nav-lock-icon">
+          FOR FREE
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Buy Section (Pure Black layer with 3-part layout) -->
+  <section class="second-layer-section" id="buy-page">
+    <!-- Floating Liquid Blobs for Glass Liquid Background Effect -->
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+
+    <div class="buy-content-wrapper">
+      <!-- Part 1: Header (Title & Subtitle) -->
+      <div class="buy-header-panel">
+        <h1 class="buy-title">OUR PRODUCT</h1>
+        <span class="buy-subtitle">16 PRODUCTS</span>
+      </div>
+
+      <!-- Main Columns Grid -->
+      <div class="buy-main-grid">
+        <!-- Part 2: Sidebar (Filters) -->
+        <aside class="buy-sidebar-container">
+          <div class="buy-sidebar-card">
+            <h2 class="sidebar-title">Categories</h2>
+            <div class="category-filter-list">
+              <label class="category-item">
+                <input type="checkbox" class="category-checkbox" value="lucky-premium">
+                <span class="category-name">Lucky Premium Game</span>
+              </label>
+              <label class="category-item">
+                <input type="checkbox" class="category-checkbox" value="lucky-raiders">
+                <span class="category-name">Lucky Raiders Game</span>
+              </label>
+              <label class="category-item">
+                <input type="checkbox" class="category-checkbox" value="lucky-expedition">
+                <span class="category-name">Lucky Expedition Game</span>
+              </label>
+              <label class="category-item">
+                <input type="checkbox" class="category-checkbox" value="lucky-kingdom">
+                <span class="category-name">Lucky Kingdom Game</span>
+              </label>
+            </div>
+          </div>
+          <div class="buy-sidebar-card">
+            <h2 class="sidebar-title">PRICE ( USD )</h2>
+            <div class="price-filter-container">
+              <input type="number" class="price-input" id="price-from" placeholder="From" min="0" step="0.01">
+              <span class="price-separator">-</span>
+              <input type="number" class="price-input" id="price-to" placeholder="For" min="0" step="0.01">
+            </div>
+          </div>
+        </aside>
+
+        <!-- Part 3: Main Products Area (16 product cards) -->
+        <main class="buy-products-panel">
+          <div class="buy-product-card card-gold-border">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/27pxn9krdm0mg99egbrf2/ChatGPT-Image-2-juil.-2026-17_25_59.png?rlkey=c70vl6vvit6h71s7ifwextro6&st=zwzs1m7l&dl=1" alt="Lucky Premium/ Raiders/ Expedition/ kingdom Game" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky Premium/ Raiders/ Expedition/ kingdom<br>Game 96X Global Steam Game</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-gold-translucent">Global</span>
+                  <span class="buy-product-badge badge-gold-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-green">13.1% Discount</span>
+                  <span class="buy-product-badge badge-red">1 Left</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price">288$</div>
+                  <div class="buy-product-price">250$</div>
+                </div>
+                <button class="buy-product-btn btn-gold">GET IT NOW</button>
+              </div>
+            </div>
+          </div>
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/5nbb9o69m77rk5v1q1u2t/ChatGPT-Image-2-juil.-2026-21_58_47.png?rlkey=69amhmy7w6kr1qfrfvp09k4x4&st=pweg7s7t&e=1&dl=1" alt="Lucky Premium Game 1X Edition" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky Premium Game 1X Edition Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 75</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">3$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+          <!-- Card 3 (2X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/hq7cbrazuh0z92rm0bvar/ChatGPT-Image-2-juil.-2026-22_01_25.png?rlkey=u7n22rspxw8wzy5qc881cnd1t&st=d36q3tmp&e=1&dl=1" alt="Lucky Premium Game 2X Edition" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky Premium Game 2X Edition Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 37</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">6$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 (3X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/gogkf1r8ob180cymp6qb3/ChatGPT-Image-2-juil.-2026-22_09_13.png?rlkey=wxe0w0d768jifw648zkdctdmm&st=rvcbli3b&dl=1" alt="Lucky Premium Game 3X Edition" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky Premium Game 3X Edition Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 25</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">9$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5 (5X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/uxhfltml808wmctoats2d/ChatGPT-Image-2-juil.-2026-22_12_42.png?rlkey=t3xw8z0leqtudviq7t1bxg40b&st=ixin1mmi&dl=1" alt="Lucky Premium Game 5X Edition" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky Premium Game 5X Edition Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 15</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">15$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+          <!-- Card 6 (10X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/zneyfj0m59tfn41ma9gvd/ChatGPT-Image-Jul-2-2026-11_35_54-PM.png?rlkey=4yzjodyvavjyesubhr1l3794d&st=yoi1m6f6&dl=1" alt="Lucky Premium Game 10X Edition" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky Premium Game 10X Edition Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 7</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">30$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+          <!-- Card 7 (Raiders 1X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/rldkidinhmj4dhsgg7pz0/ChatGPT-Image-3-juil.-2026-11_47_31.png?rlkey=enox6cwwyn7m2g6wbvjdcnc0w&st=46c9j8j9&dl=1" alt="Lucky Raiders Game 1X" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky Raiders Game 1X Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 2</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">3$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+          <!-- Card 8 (Raiders 2X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/1w8vwqgkptipdzy4x8hfa/ChatGPT-Image-3-juil.-2026-11_50_28.png?rlkey=zo8z67s51333cvj9j9yl4zh31&st=asws56sb&dl=1" alt="Lucky Raiders Game 2X" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky Raiders Game 2X Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 1</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">6$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+          <!-- Card 9 (Expedition 1X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/v3o8m8owe9833orjoyhs9/EX-X1.png?rlkey=fs5lqr3431eysn4q1qb5s0b0b&st=sf5wdwzh&dl=1" alt="Lucky Expedition Game 1X" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky Expedition Game 1X Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 4</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">3$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 10 (Expedition 2X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/c86vmevgk30upcpqe03d3/EX-X2.png?rlkey=65ok6upzyp4rf9gpq8b99so3k&st=7ayfn19m&dl=1" alt="Lucky Expedition Game 2X" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky Expedition Game 2X Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 2</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">6$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 11 (Expedition 4X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/t5e3uf4nofmz95ad70vvd/ChatGPT-Image-3-juil.-2026-03_34_14.png?rlkey=krywqss94vbugfnb7gnepfpla&st=n7451yck&dl=1" alt="Lucky Expedition Game 4X" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky Expedition Game 4X Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 1</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">12$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+          <!-- Card 12 (kingdom 1X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/lo9btvpa2ibkm3df6oc1e/ChatGPT-Image-3-juil.-2026-11_04_18.png?rlkey=drar8uzbhbw5pnjauf552fn09&st=1p1avtgb&dl=1" alt="Lucky kingdom Game 1X" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky kingdom Game 1X Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 15</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">3$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 13 (kingdom 3X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/imldxys8mrea1h8n6hyyp/CRI-3X.png?rlkey=72sv5j0vnf5d8zlhdu7kd0wyx&st=vqvlyna0&dl=1" alt="Lucky kingdom Game 3X" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky kingdom Game 3X Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 5</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">9$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 14 (kingdom 5X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/1qh6bos60prtutuj72ox9/CRI-5X.png?rlkey=f042edoqg4rx471rru9psqtm8&st=w8vw2wzn&dl=1" alt="Lucky kingdom Game 5X" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky kingdom Game 5X Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 3</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">15$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 15 (kingdom 10X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/nwsgzh9nhu7ri7jmcfdav/CRI-10X.png?rlkey=kf7g5m555d2yqotxic5xby6hf&st=kumdu80u&dl=1" alt="Lucky kingdom Game 10X" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky kingdom Game 10X Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 1</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">30$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 16 (kingdom 15X Edition) -->
+          <div class="buy-product-card">
+            <div class="buy-product-card-inner">
+              <div class="buy-product-thumbnail-container">
+                <img src="https://www.dropbox.com/scl/fi/5zbwtsxnpmjkot4j7me0e/CRI-15X.png?rlkey=jcwpwm8e5yjz2uj42mbxgkp54&st=k3vv3tww&dl=1" alt="Lucky kingdom Game 15X" class="buy-product-thumbnail">
+              </div>
+              <div class="buy-product-details">
+                <h3 class="buy-product-title">Lucky kingdom Game 15X Global Steam</h3>
+                <div class="buy-product-meta">
+                  <span class="buy-product-badge badge-blue-translucent">Global</span>
+                  <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                  <span class="buy-product-badge badge-blue-translucent">Stock: 1</span>
+                </div>
+              </div>
+              <div class="buy-product-action">
+                <div class="buy-product-price-container">
+                  <div class="buy-product-original-price" style="visibility: hidden; pointer-events: none;">&nbsp;</div>
+                  <div class="buy-product-price price-white">45$</div>
+                </div>
+                <button class="buy-product-btn">PURCHASE</button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cloud Divider Transition & Footer Layer for Buy Page -->
+  <section class="blue-half-layer buy-page-footer">
+    <!-- Cloud Style Divider -->
+    <div class="cloud-divider">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Main Black Cloud (filled bottom) -->
+        <path d="M0,120 L0,0 C90,40 180,60 280,60 C380,60 460,20 540,40 C620,60 700,80 800,80 C900,80 980,40 1060,50 C1140,60 1240,90 1340,70 C1390,60 1420,30 1440,0 L1440,120 Z" fill="#000000"></path>
+      </svg>
+    </div>
+
+    <!-- Footer Content Wrapper -->
+    <div class="buy-footer-body-wrapper">
+      <div class="blue-layer-content">
+        <div class="blue-layer-left">
+          <!-- Site Logo & Social Links Row -->
+          <div class="blue-layer-logo-row">
+            <div class="blue-layer-logo-glass">
+              <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="blue-layer-logo-img">
+              <div class="blue-layer-logo-text">
+                <span class="blue-layer-text-destiny">DESTINY</span>
+                <span class="blue-layer-text-rewards">REWARDS</span>
+              </div>
+            </div>
+            <div class="blue-layer-socials">
+              <a href="https://t.me/Destinyrewards_bot" target="_blank" class="blue-layer-social-link" title="Telegram">
+                <img src="https://www.dropbox.com/scl/fi/0c7uekuupio6rckmdf72u/telegram-white-icon.webp?rlkey=gwg7wb0xie3cr5kab7jdatjw4&st=m3d5ml2y&dl=1" alt="Telegram">
+              </a>
+              <a href="#" class="blue-layer-social-link" title="Instagram">
+                <img src="https://www.dropbox.com/scl/fi/vqayt584oli4i16ela37h/instagram-white-icon.webp?rlkey=kmlvg9oy78dyfy115shmtsr7e&st=0z54w1rb&dl=1" alt="Instagram">
+              </a>
+              <a href="#" class="blue-layer-social-link" title="Facebook">
+                <img src="https://www.dropbox.com/scl/fi/pay7c8vo5xnt0syfwpowv/facebook-app-round-white-icon.webp?rlkey=svhxzcrct0hc3o8ta98lpeieq&st=a6orxjrm&dl=1" alt="Facebook">
+              </a>
+            </div>
+          </div>
+          <!-- Description -->
+          <p class="blue-layer-description">
+            DestinyRewards is a digital marketplace for gaming products, offering great deals, exclusive rewards, and affordable prices. We're happy to have you as part of our community!
+          </p>
+        </div>
+
+        <div class="blue-layer-right">
+          <!-- Navigation Card (Copy of the Liquid Glass Card) -->
+          <div class="blue-layer-nav-card">
+            <div class="blue-layer-nav-grid">
+              <a href="index.html" class="blue-layer-nav-link">HOME</a>
+              <a href="mailto:support@destinyrewards.com" class="blue-layer-nav-link">EMAIL US</a>
+              <a href="challenge.html" class="blue-layer-nav-link">CHALLENGE</a>
+              <a href="buy.html" class="blue-layer-nav-link">BUY</a>
+              <a href="index.html#second-layer" class="blue-layer-nav-link">BID</a>
+              <a href="index.html#second-layer" class="blue-layer-nav-link">FOR FREE</a>
+            </div>
+          </div>
+          <!-- Copyright Info -->
+          <div class="blue-layer-rights">
+            Ⓒ 2026 DESTINY REWARDS. All Rights Reserved
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Backdrop Overlay -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+
+  <!-- Liquid Glass Centered Modal Message Panel -->
+  <div class="side-message-panel" id="side-message-panel">
+    <button class="side-message-close" id="close-side-message">&times;</button>
+    <img src="images/bid_unavailable.png" alt="Bid Section Coming Soon" class="modal-image-only">
+    <!-- Invisible overlay link positioned over the JOIN TELEGRAM button -->
+    <a href="https://t.me/Destinyrewards_bot" target="_blank" class="modal-telegram-overlay-link"
+      aria-label="Join Telegram"></a>
+  </div>
+
+</body>
+
+</html>

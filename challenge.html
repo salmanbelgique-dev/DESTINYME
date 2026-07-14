@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destiny Rewards - Challenge</title>
+  <meta name="description" content="Destiny Rewards Reflex Test Challenge">
+  <!-- Google Fonts: Montserrat Heavy Italic & Bangers -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat:ital,wght@1,900&display=swap"
+    rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css?v=113">
+  <style>
+    /* Critical layout properties for immediate rendering on load (prevents FOUC/jumping) */
+    :root {
+      --logo-size: 96px;
+      --logo-target-left: 24px;
+      --logo-target-top: 16px;
+      --logo-expanded-width: 270px;
+      --logo-text-width: 160px;
+    }
+    @media (max-width: 768px) {
+      :root {
+        --logo-size: 72px;
+        --logo-target-left: 16px;
+        --logo-target-top: 12px;
+        --logo-expanded-width: 210px;
+        --logo-text-width: 120px;
+      }
+    }
+    .brand-logo-glass-container {
+      position: fixed !important;
+      top: var(--logo-target-top) !important;
+      left: var(--logo-target-left) !important;
+      width: var(--logo-expanded-width) !important;
+      height: var(--logo-size) !important;
+      transform: translate(0, 0) scale(0.85) !important;
+      animation: none !important;
+    }
+    .brand-logo-text {
+      animation: none !important;
+      opacity: 1 !important;
+      width: var(--logo-text-width) !important;
+      transform: translateX(0) !important;
+    }
+    #sticky-nav {
+      position: fixed !important;
+      top: calc(var(--logo-target-top) + (var(--logo-size) - 54px) / 2) !important;
+      right: var(--logo-target-left) !important;
+      transform: translateX(0) scale(0.85) !important;
+      opacity: 1 !important;
+      transition: none !important;
+    }
+    @media (max-width: 768px) {
+      #sticky-nav {
+        top: calc(var(--logo-target-top) + (var(--logo-size) - 38px) / 2) !important;
+      }
+    }
+
+    /* Red Liquid Glass Speaker Button */
+    .speaker-toggle-btn {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(239, 68, 68, 0.2); /* Red tint */
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px 0 rgba(239, 68, 68, 0.15),
+                  inset 0 0 12px rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 101;
+      transition: all 0.3s ease;
+    }
+
+    .speaker-toggle-btn:hover {
+      background: rgba(239, 68, 68, 0.35);
+      border-color: rgba(239, 68, 68, 0.6);
+      transform: scale(1.05);
+      box-shadow: 0 8px 32px 0 rgba(239, 68, 68, 0.3),
+                  inset 0 0 16px rgba(255, 255, 255, 0.2);
+    }
+
+    .speaker-toggle-btn:active {
+      transform: scale(0.95);
+    }
+
+    .speaker-toggle-btn svg {
+      width: 22px;
+      height: 22px;
+      color: #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    /* Off state (muted/stopped) style */
+    .speaker-toggle-btn.muted {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .speaker-toggle-btn.muted svg {
+      color: rgba(255, 255, 255, 0.4);
+    }
+  </style>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Import Map for Firebase Modules -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+        "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"
+      }
+    }
+  </script>
+  <!-- Firebase Initialization -->
+  <script src="firebase.js?v=105" type="module"></script>
+  <!-- JavaScript -->
+  <script src="script.js?v=105" defer></script>
+</head>
+
+<body class="challenge-page-body">
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999;"></canvas>
+
+  <!-- Animated Glass Liquid Logo Container (Settle State) -->
+  <div class="brand-logo-glass-container" onclick="window.location.href='index.html';" style="animation: none; transform: translate(0, 0) scale(0.85); top: var(--logo-target-top); left: var(--logo-target-left); cursor: pointer;">
+    <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="brand-logo-img">
+    <div class="brand-logo-text">
+      <div class="text-destiny">DESTINY</div>
+      <div class="text-rewards">REWARDS</div>
+    </div>
+  </div>
+
+  <!-- Sticky Liquid Glass Navigation Bar (Visible State) -->
+  <nav id="sticky-nav" class="visible">
+    <div class="nav-sliding-bubble" id="nav-sliding-bubble"></div>
+    <ul class="sticky-nav-links">
+      <li>
+        <a href="index.html" class="sticky-nav-link">
+          <svg class="nav-home-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2.09c-.55 0-1.05.28-1.38.73L2.38 11.06c-.5.5-.14 1.36.57 1.36H5v6.5c0 1.1.9 2 2 2h3v-5c0-1.1.9-2 2-2s2 .9 2 2v5h3c1.1 0 2-.9 2-2v-6.5h2.05c.71 0 1.07-.86.57-1.36L13.38 2.82C13.05 2.37 12.55 2.09 12 2.09z" />
+          </svg>
+          HOME
+        </a>
+      </li>
+      <li>
+        <a href="buy.html" class="sticky-nav-link" id="nav-buy-link">
+          <img src="images/buy_icon_white_dollar.png" alt="Buy" class="nav-buy-icon">
+          BUY
+        </a>
+      </li>
+      <li>
+        <a href="challenge.html" class="sticky-nav-link" id="nav-challenge-link">
+          <svg class="nav-spin-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Wheel circle background -->
+            <circle cx="50" cy="48" r="40" fill="#6B8AFF" />
+            <!-- Wheel segments (white cuts) -->
+            <path d="M50 8 L50 48 L82 20Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M90 48 L50 48 L78 76Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M50 88 L50 48 L22 76Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M10 48 L50 48 L18 20Z" fill="rgba(255,255,255,0.92)" />
+            <!-- Center hub -->
+            <circle cx="50" cy="48" r="6" fill="#6B8AFF" stroke="rgba(255,255,255,0.92)" stroke-width="3" />
+            <!-- Pointer/flapper on left -->
+            <circle cx="12" cy="40" r="5" fill="rgba(255,255,255,0.92)" />
+            <!-- Stand/pedestal -->
+            <rect x="44" y="86" width="12" height="14" rx="2" fill="#6B8AFF" />
+            <path d="M32 100 Q50 95 68 100 L68 108 Q50 103 32 108Z" fill="#6B8AFF" />
+          </svg>
+          CHALLENGE
+        </a>
+      </li>
+      <li>
+        <a href="index.html#second-layer" class="sticky-nav-link" id="nav-bid-link">
+          <img src="images/lock_cropped.png" alt="Lock" class="nav-lock-icon">
+          BID
+        </a>
+      </li>
+      <li>
+        <a href="index.html#second-layer" class="sticky-nav-link" id="nav-free-link">
+          <img src="images/lock_cropped.png" alt="Lock" class="nav-lock-icon">
+          FOR FREE
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Challenge Section -->
+  <section class="second-layer-section" id="challenge-page" style="align-items: center; justify-content: center; padding: 120px 24px 50px 24px;">
+    <!-- Floating Liquid Blobs for Glass Liquid Background Effect -->
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+
+    <!-- Left Joker Character (Larger, Opaque PNG) -->
+    <div class="joker-character joker-left" style="position: absolute; left: 1%; bottom: 10px; height: 580px; z-index: 3; pointer-events: none; animation: float-left 5s ease-in-out infinite;">
+      <img src="images/joker_1.png" alt="Joker Left" style="height: 100%; object-fit: contain;">
+    </div>
+
+    <!-- Spin Wheel Game Container in a beautiful glass card (No text messages) -->
+    <div class="second-layer-content logged-out" id="challenge-container">
+      <!-- Glass reflection overlay -->
+      <div class="glass-reflection-shine"></div>
+      
+      <!-- Red Liquid Glass Speaker Button -->
+      <div id="speaker-toggle" class="speaker-toggle-btn" onclick="toggleEventSong()" title="Toggle Event Music">
+        <!-- Speaker ON Icon -->
+        <svg id="speaker-on-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <!-- Speaker OFF Icon -->
+        <svg id="speaker-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </div>
+      <!-- User Profile Widget (Top Right) -->
+      <div class="user-profile-widget" style="display: none;">
+        <div class="profile-logout-btn" id="profile-logout-btn" title="Log Out">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </div>
+        <div class="profile-text-container">
+          <span class="profile-name" id="profile-name">Guest</span>
+          <span class="profile-id" id="profile-id">ID: -----</span>
+        </div>
+        <div class="profile-avatar-container" id="profile-avatar-container" title="Click to upload logo">
+          <img src="" alt="" id="profile-avatar-img" class="profile-avatar-img" style="display: none;">
+          <!-- Default User Silhouette SVG -->
+          <svg id="profile-avatar-placeholder" class="profile-avatar-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <input type="file" id="profile-avatar-input" style="display: none;" accept="image/*">
+      </div>
+
+      <!-- Sign-Up Gate Overlay -->
+      <div class="signup-gate-overlay" id="signup-gate">
+        <div class="signup-gate-content">
+          <div class="signup-gate-lock-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h2 class="signup-gate-title">UNLOCK THE DESTINY WHEEL</h2>
+          <p class="signup-gate-desc">Sign up with Google to participate in the Destiny Rewards Challenge and claim your exclusive discounts!</p>
+          <button class="google-signin-btn" id="google-signin-btn">
+            <div class="google-icon-wrapper">
+              <svg class="google-icon" viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+              </svg>
+            </div>
+            <span class="google-btn-text">Sign up with Google</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Profile Setup Gate Overlay (shown after sign-up for new users) -->
+      <div class="signup-gate-overlay" id="profile-setup-gate" style="display: none;">
+        <div class="signup-gate-content profile-setup-content">
+          <h2 class="signup-gate-title">COMPLETE YOUR PROFILE</h2>
+          <p class="signup-gate-desc profile-desc">Upload a profile picture and choose a username to unlock the wheel.</p>
+          
+          <div class="setup-avatar-upload" id="setup-avatar-upload" title="Click to upload profile picture">
+            <img src="" alt="" id="setup-avatar-img" style="display: none;">
+            <svg id="setup-avatar-icon" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="grey" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </div>
+          <input type="file" id="setup-avatar-input" style="display: none;" accept="image/*">
+          
+          <input type="text" id="setup-username-input" class="setup-username-input" placeholder="Enter Username" autocomplete="off" maxlength="20">
+          <span id="setup-username-error" class="setup-username-error">Username is already taken!</span>
+          
+          <button class="setup-continue-btn" id="setup-continue-btn">CONTINUE TO WHEEL</button>
+        </div>
+      </div>
+      <!-- Inline script to prevent FOUC (Flash of Unauthenticated Content) -->
+      <script>
+        (function() {
+          const isLoggedIn = localStorage.getItem("profileIsLoggedIn") === "true";
+          const container = document.getElementById("challenge-container");
+          const signupGate = document.getElementById("signup-gate");
+          const profileWidget = document.querySelector(".user-profile-widget");
+          if (isLoggedIn) {
+            if (container) container.classList.remove("logged-out");
+            if (signupGate) signupGate.style.display = "none";
+            if (profileWidget) profileWidget.style.display = "flex";
+          } else {
+            if (container) container.classList.add("logged-out");
+            if (signupGate) signupGate.style.display = "flex";
+            if (profileWidget) profileWidget.style.display = "none";
+          }
+        })();
+      </script>
+
+      <!-- Left Column: Spin Wheel Panel -->
+      <div class="challenge-left-panel" id="challenge-left-panel">
+        <div class="wheel-outer-container">
+          <!-- Pointer pointing down at top center -->
+          <div class="wheel-pointer"></div>
+          
+          <!-- Canvas for Wheel (380px diameter) -->
+          <canvas id="wheel-canvas" width="380" height="380"></canvas>
+          
+          <!-- Center Circular Spin Button -->
+          <button id="spin-btn" onclick="spinWheel()">SPIN</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Reflex Test Start Panel -->
+      <div class="challenge-right-panel" id="challenge-right-panel">
+        <div class="game-screen" id="start-screen">
+          <h2 class="challenge-title">BEAT <span style="color: #a855f7;">OUR JOKER</span><br><span class="title-second-line">GET <span style="color: #6b8aff;">-10% DISCOUNT</span></span></h2>
+          <p class="challenge-desc">Try your luck every <span style="color: #ffffff; font-weight: 700;">24 hours</span> for a chance to win up to <span style="color: #6b8aff; font-weight: 900; font-style: italic;">10% OFF</span>. Don't miss the opportunity to grab your favorite products at the <span style="color: #a855f7; font-weight: 900; font-style: italic;">lowest price</span>. <span style="color: #ffffff; font-weight: 700;">Spin now</span> before your chance expires!</p>
+          <div id="cooldown-timer" class="cooldown-timer"></div>
+          <button id="start-challenge-btn" onclick="goToBuySection()">BUY</button>
+
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Joker Character (Larger, Opaque PNG) -->
+    <div class="joker-character joker-right" style="position: absolute; right: 1%; bottom: 10px; height: 580px; z-index: 3; pointer-events: none; animation: float-right 6s ease-in-out infinite;">
+      <img src="images/joker_2.png" alt="Joker Right" style="height: 100%; object-fit: contain;">
+    </div>
+  </section>
+
+  <!-- Modal Backdrop Overlay -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+
+  <!-- Liquid Glass Centered Modal Message Panel -->
+  <div class="side-message-panel" id="side-message-panel">
+    <button class="side-message-close" id="close-side-message">&times;</button>
+    <img src="images/bid_unavailable.png" alt="Bid Section Coming Soon" class="modal-image-only">
+    <!-- Invisible overlay link positioned over the JOIN TELEGRAM button -->
+    <a href="https://t.me/Destinyrewards_bot" target="_blank" class="modal-telegram-overlay-link"
+      aria-label="Join Telegram"></a>
+  </div>
+
+  <!-- Swipe Down Joker Overlay for Next Time -->
+  <div id="joker-next-time-overlay" class="joker-swipe-overlay">
+    <div class="joker-card-3d-wrapper">
+      <div class="joker-card-inner">
+        <!-- Card Front (Joker Face) -->
+        <div class="joker-card-face joker-card-front">
+          <img id="joker-card-front-img" src="images/joker-design-22.png" alt="Joker Card Front" class="joker-swipe-img">
+        </div>
+        <!-- Card Back (Blank Paper Texture) -->
+        <div class="joker-card-face joker-card-back">
+          <img id="joker-card-back-img" src="images/joker-design-24.png" alt="Joker Card Back" class="joker-swipe-img">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destiny Rewards</title>
+  <meta name="description" content="Destiny Rewards Landing Page">
+  <!-- Google Fonts: Montserrat Heavy Italic & Bangers -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat:ital,wght@1,900&display=swap"
+    rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css?v=113">
+  <style>
+    /* Pin the iPhone design inside the viewport */
+    #second-layer {
+      min-height: 300vh !important; /* 3 layers total: 1 layer to scroll/animate in, 2 layers pinned */
+      align-items: flex-start !important; /* Align content to top to allow sticking */
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      overflow: visible !important; /* Allow sticky position to work relative to window scroll */
+    }
+
+    #second-layer .second-layer-content {
+      background: none !important;
+      border: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      animation: none !important;
+      height: calc(100vh - 100px) !important;
+      min-height: calc(100vh - 100px) !important;
+      aspect-ratio: auto !important;
+      padding: 0 !important;
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 100px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+      box-sizing: border-box !important;
+      width: 800px !important;
+      max-width: 95% !important;
+      margin: 0 auto !important;
+    }
+
+    /* Premium iOS-style White Notification Card on the left */
+    .phone-notification-card {
+      position: absolute !important;
+      right: calc(50% + 150px) !important; /* Position on the left side of the phone mockup, slightly overlapping the edge */
+      top: 22% !important;
+      transform: translateX(-45px) scale(0.9) !important;
+      width: 320px !important;
+      padding: 20px 24px !important;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+      backdrop-filter: blur(30px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.24) !important;
+      border-radius: 28px !important;
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.7),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3),
+        inset 0 10px 20px rgba(255, 255, 255, 0.05) !important;
+      z-index: 12 !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: 
+        opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1), 
+        transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), 
+        visibility 0.6s !important;
+      box-sizing: border-box !important;
+    }
+
+    .phone-notification-card.active {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateX(0) scale(1) !important;
+    }
+
+    #phone-left-notification-2 {
+      right: auto !important;
+      left: calc(50% + 150px) !important; /* Touches/overlaps the right edge of the iPhone mockup by 30px */
+      top: 10% !important; /* Positioned at the top-right of the phone mockup */
+    }
+
+    /* Premium iOS-style White Notification Card on the right (Challenge Message) */
+    .phone-right-notification-card {
+      position: absolute !important;
+      left: calc(50% + 150px) !important; /* Position on the right side of the phone mockup, slightly overlapping the edge */
+      top: 22% !important;
+      transform: translateX(45px) scale(0.9) !important;
+      width: 320px !important;
+      padding: 20px 24px !important;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+      backdrop-filter: blur(30px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.24) !important;
+      border-radius: 28px !important;
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.7),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3),
+        inset 0 10px 20px rgba(255, 255, 255, 0.05) !important;
+      z-index: 12 !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: 
+        opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1), 
+        transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), 
+        visibility 0.6s !important;
+      box-sizing: border-box !important;
+    }
+
+    .phone-right-notification-card.active {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateX(0) scale(1) !important;
+    }
+
+    .notification-header {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      margin-bottom: 12px !important;
+    }
+
+    .notification-logo {
+      width: 18px !important;
+      height: 18px !important;
+      object-fit: contain !important;
+    }
+
+    .notification-app-name {
+      font-family: 'Montserrat', sans-serif !important;
+      font-weight: 800 !important;
+      font-size: 0.75rem !important;
+      letter-spacing: 1.5px !important;
+      color: rgba(255, 255, 255, 0.65) !important;
+    }
+
+    .notification-text {
+      font-family: 'Montserrat', sans-serif !important;
+      font-weight: 800 !important;
+      font-style: italic !important;
+      font-size: 1.1rem !important;
+      line-height: 1.35 !important;
+      color: #ffffff !important;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95) !important;
+      margin: 0 0 18px 0 !important;
+      text-align: left !important;
+    }
+
+    .notification-buy-btn {
+      display: block !important;
+      width: 100% !important;
+      background: linear-gradient(135deg, rgba(107, 138, 255, 0.2) 0%, rgba(107, 138, 255, 0.05) 100%) !important;
+      border: 1.5px solid rgba(107, 138, 255, 0.45) !important;
+      border-radius: 16px !important;
+      color: #ffffff !important;
+      font-family: 'Montserrat', sans-serif !important;
+      font-weight: 900 !important;
+      font-style: italic !important;
+      font-size: 0.95rem !important;
+      letter-spacing: 1px !important;
+      padding: 11px 0 !important;
+      text-align: center !important;
+      cursor: pointer !important;
+      text-decoration: none !important;
+      box-shadow: 
+        0 8px 24px rgba(107, 138, 255, 0.15),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+      box-sizing: border-box !important;
+    }
+
+    .notification-buy-btn:hover {
+      transform: translateY(-2px) !important;
+      background: linear-gradient(135deg, rgba(107, 138, 255, 0.35) 0%, rgba(107, 138, 255, 0.1) 100%) !important;
+      border-color: rgba(107, 138, 255, 0.8) !important;
+      box-shadow: 
+        0 12px 30px rgba(107, 138, 255, 0.35),
+        0 0 20px rgba(107, 138, 255, 0.4) !important;
+    }
+
+    .notification-buy-btn:active {
+      transform: translateY(1px) !important;
+    }
+
+    .notification-btn-icon {
+      width: 16px !important;
+      height: 16px !important;
+      margin-right: 8px !important;
+      vertical-align: middle !important;
+      position: relative !important;
+      top: -1px !important;
+    }
+
+    /* Left Side Liquid Glass Slideshow Card (Phase 2) */
+    .phone-left-placeholder-glass-card {
+      position: absolute !important;
+      right: calc(50% + 100px) !important; /* Overlaps left edge of the iPhone by ~18% (80px of 440px) */
+      top: 22% !important;
+      transform: translateX(-45px) scale(0.95) !important;
+      width: 440px !important;
+      height: 260px !important;
+      padding: 16px !important;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.25) 100%) !important;
+      backdrop-filter: blur(40px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+      border: 1.5px solid rgba(107, 138, 255, 0.35) !important;
+      border-radius: 36px !important;
+      overflow: visible !important;
+      box-shadow: 
+        0 40px 80px rgba(0, 0, 0, 0.75), /* soft ambient shadow */
+        inset 0 1px 0px rgba(255, 255, 255, 0.35), /* glossy reflection on top edge */
+        inset 0 8px 32px rgba(255, 255, 255, 0.05), /* soft highlights */
+        inset 0 -10px 20px rgba(0, 0, 0, 0.4), /* glass depth */
+        0 0 30px rgba(107, 138, 255, 0.1) !important; /* ambient glow */
+      z-index: 12 !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: 
+        opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1), 
+        transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), 
+        visibility 0.6s !important;
+      box-sizing: border-box !important;
+    }
+
+    .phone-left-placeholder-glass-card.active {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateX(0) scale(1) !important;
+    }
+
+    /* Premium Floating Large Glass Cards for Phase 3 */
+    .phone-small-glass-card {
+      position: absolute !important;
+      width: 200px !important;
+      height: 200px !important;
+      padding: 16px !important; /* Spacing for nested slideshow wrapper */
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.25) 100%) !important;
+      backdrop-filter: blur(40px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+      border: 1.5px solid rgba(107, 138, 255, 0.35) !important;
+      border-radius: 36px !important;
+      box-shadow: 
+        0 40px 80px rgba(0, 0, 0, 0.75), /* soft ambient shadow */
+        inset 0 1px 0px rgba(255, 255, 255, 0.35), /* glossy reflection on top edge */
+        inset 0 8px 32px rgba(255, 255, 255, 0.05), /* soft highlights */
+        inset 0 -10px 20px rgba(0, 0, 0, 0.4), /* glass depth */
+        0 0 30px rgba(107, 138, 255, 0.1) !important; /* ambient glow */
+      z-index: 12 !important; /* in front of phone edge (which is 10) */
+      opacity: 0 !important;
+      visibility: hidden !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      box-sizing: border-box !important;
+      transition: 
+        opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1), 
+        transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), 
+        visibility 0.6s,
+        box-shadow 0.3s ease !important;
+    }
+
+    .phone-small-glass-card:hover {
+      transform: translateY(-6px) scale(1.05) !important;
+      box-shadow: 
+        0 48px 90px rgba(0, 0, 0, 0.85),
+        0 0 45px rgba(107, 138, 255, 0.35), /* increased glow */
+        inset 0 1px 0px rgba(255, 255, 255, 0.45),
+        inset 0 8px 32px rgba(255, 255, 255, 0.1) !important;
+      transition: transform 300ms cubic-bezier(0.19, 1, 0.22, 1), box-shadow 300ms ease !important;
+    }
+
+
+
+    #small-card-1 {
+      right: calc(50% + 60px) !important; /* Overlaps left edge of the iPhone mockup by 120px */
+      top: 10% !important;
+      transform: translateX(-30px) scale(0.95) !important;
+    }
+
+    #small-card-2 {
+      right: calc(50% + 60px) !important; /* Overlaps left edge of the iPhone mockup by 120px */
+      top: 66% !important;
+      transform: translateX(-30px) scale(0.95) !important;
+    }
+
+    #small-card-3 {
+      left: calc(50% + 60px) !important; /* Overlaps right edge of the iPhone mockup by 120px */
+      top: calc(50% - 40px) !important; /* Centered vertically for 200px height, shifted slightly up */
+      transform: translateX(30px) scale(0.95) !important;
+    }
+
+    .phone-small-glass-card.active {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateX(0) scale(1) !important;
+    }
+
+
+
+    #small-card-1.active {
+      animation: float-card 6s ease-in-out infinite;
+      animation-delay: 0s;
+    }
+
+    #small-card-2.active {
+      animation: float-card 6s ease-in-out infinite;
+      animation-delay: 3s;
+    }
+
+    #small-card-3.active {
+      animation: float-card 6s ease-in-out infinite;
+      animation-delay: 1.5s;
+    }
+
+    @keyframes float-card {
+      0% { translate: 0 0; }
+      50% { translate: 0 -10px; }
+      100% { translate: 0 0; }
+    }
+
+
+
+
+
+
+
+    @media (max-width: 950px) {
+      .phone-small-glass-card {
+        display: none !important;
+      }
+    }
+
+
+
+
+
+    /* Right Side Liquid Glass Placeholder Card */
+    .phone-placeholder-glass-card {
+      position: absolute !important;
+      left: calc(50% + 100px) !important; /* Overlaps right edge of the iPhone by ~18% (80px of 440px) */
+      top: 22% !important;
+      transform: translateX(45px) scale(0.95) !important;
+      width: 440px !important;
+      height: 260px !important;
+      padding: 16px !important;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.25) 100%) !important;
+      backdrop-filter: blur(40px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+      border: 1.5px solid rgba(107, 138, 255, 0.35) !important;
+      border-radius: 36px !important;
+      box-shadow: 
+        0 40px 80px rgba(0, 0, 0, 0.75), /* soft ambient shadow */
+        inset 0 1px 0px rgba(255, 255, 255, 0.35), /* glossy reflection on top edge */
+        inset 0 8px 32px rgba(255, 255, 255, 0.05), /* soft highlights */
+        inset 0 -10px 20px rgba(0, 0, 0, 0.4), /* glass depth */
+        0 0 30px rgba(107, 138, 255, 0.1) !important; /* ambient glow */
+      z-index: 12 !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: 
+        opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1), 
+        transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), 
+        visibility 0.6s !important;
+      box-sizing: border-box !important;
+    }
+
+    .phone-frame-mockup {
+      z-index: 10 !important;
+    }
+
+    /* CSS sibling trigger: show the placeholder when left notification is active */
+    .phone-notification-card.active ~ .phone-placeholder-glass-card {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateX(0) scale(1) !important;
+    }
+
+    /* Inside right-side Liquid Glass product panel */
+    .glass-product-content {
+      width: 100% !important;
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      box-sizing: border-box !important;
+    }
+
+    .glass-product-banner-wrapper {
+      position: relative !important;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 24px !important;
+      overflow: hidden !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+      background: rgba(0, 0, 0, 0.4) !important;
+      box-shadow: 
+        0 15px 30px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1) !important;
+      box-sizing: border-box !important;
+    }
+
+    .glass-product-banner {
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      opacity: 0 !important;
+      transition: opacity 0.8s ease-in-out !important;
+    }
+
+    .glass-product-banner.active {
+      opacity: 1 !important;
+      z-index: 2 !important;
+    }
+
+    #binance-pay-banner {
+      object-fit: contain !important;
+      padding: 24px !important;
+      box-sizing: border-box !important;
+    }
+
+    #phone-left-notification-3 {
+      right: auto !important;
+      left: 50% !important;
+      top: auto !important;
+      bottom: 90px !important;
+      transform: translateX(-50%) translateY(45px) scale(0.9) !important;
+      z-index: 20 !important;
+    }
+
+    #phone-left-notification-3.active {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateX(-50%) translateY(0) scale(1) !important;
+    }
+
+    /* Glass Liquid Circle for Heart Favorite Indicator */
+    .favorite-heart-circle {
+      position: absolute !important;
+      top: 14px !important;
+      right: 14px !important;
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 50% !important;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+      backdrop-filter: blur(15px) saturate(140%) !important;
+      -webkit-backdrop-filter: blur(15px) saturate(140%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.3),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      z-index: 10 !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .favorite-heart-circle:hover {
+      transform: scale(1.08) !important;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.1) 100%) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .favorite-heart-icon {
+      width: 20px !important;
+      height: 20px !important;
+      fill: transparent !important;
+      stroke: rgba(255, 255, 255, 0.9) !important;
+      stroke-width: 2px !important;
+      stroke-linejoin: round !important;
+      transform: scale(0.8) rotate(0deg) !important;
+      transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1) !important;
+      transition-delay: 0.6s !important; /* Starts coloring after the card slides in */
+    }
+
+    /* Target the heart color change triggered by layout activation */
+    .phone-notification-card.active ~ .phone-placeholder-glass-card .favorite-heart-icon {
+      fill: #ff2d55 !important;
+      stroke: #ff2d55 !important;
+      transform: scale(1.15) rotate(360deg) !important;
+      filter: drop-shadow(0 0 10px rgba(255, 45, 85, 0.8)) !important;
+    }
+
+    .glass-product-purchase-btn {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      width: 100% !important;
+      background: linear-gradient(135deg, rgba(107, 138, 255, 0.2) 0%, rgba(107, 138, 255, 0.05) 100%) !important;
+      border: 1.5px solid rgba(107, 138, 255, 0.45) !important;
+      border-radius: 16px !important;
+      color: #ffffff !important;
+      font-family: 'Montserrat', sans-serif !important;
+      font-weight: 900 !important;
+      font-style: italic !important;
+      font-size: 0.95rem !important;
+      letter-spacing: 1.5px !important;
+      padding: 11px 0 !important;
+      text-decoration: none !important;
+      cursor: pointer !important;
+      box-shadow: 
+        0 8px 24px rgba(107, 138, 255, 0.15),
+        inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+      box-sizing: border-box !important;
+    }
+
+    .glass-product-purchase-btn:hover {
+      transform: translateY(-2px) !important;
+      background: linear-gradient(135deg, rgba(107, 138, 255, 0.35) 0%, rgba(107, 138, 255, 0.1) 100%) !important;
+      border-color: rgba(107, 138, 255, 0.8) !important;
+      box-shadow: 
+        0 12px 30px rgba(107, 138, 255, 0.35),
+        0 0 20px rgba(107, 138, 255, 0.4) !important;
+    }
+
+    .glass-product-purchase-btn:active {
+      transform: translateY(1px) !important;
+    }
+
+    @media (max-width: 1100px) {
+      .phone-notification-card {
+        width: 290px !important;
+        right: calc(50% + 140px) !important;
+      }
+      #phone-left-notification-2 {
+        right: auto !important;
+        left: calc(50% + 140px) !important;
+        top: 10% !important;
+      }
+      .phone-placeholder-glass-card {
+        width: 380px !important;
+        left: calc(50% + 90px) !important;
+      }
+      .phone-left-placeholder-glass-card {
+        width: 380px !important;
+        right: calc(50% + 90px) !important;
+      }
+      .phone-right-notification-card {
+        width: 290px !important;
+        left: calc(50% + 140px) !important;
+      }
+    }
+
+    @media (max-width: 950px) {
+      .phone-placeholder-glass-card {
+        display: none !important;
+      }
+      .phone-left-placeholder-glass-card {
+        display: none !important;
+      }
+      .phone-right-notification-card {
+        display: none !important;
+      }
+      .phone-small-glass-card {
+        display: none !important;
+      }
+    }
+
+
+
+    @media (max-width: 850px) {
+      .phone-notification-card {
+        right: auto !important;
+        left: 50% !important;
+        top: auto !important;
+        bottom: 60px !important;
+        transform: translateX(-50%) translateY(40px) scale(0.9) !important;
+        width: 290px !important;
+        padding: 16px 20px !important;
+        border-radius: 24px !important;
+      }
+      
+      .phone-notification-card.active {
+        transform: translateX(-50%) translateY(0) scale(1) !important;
+      }
+
+      #phone-left-notification-2 {
+        top: auto !important;
+      }
+    }
+
+    /* Hide the header text completely */
+    .recommended-header-box {
+      display: none !important;
+    }
+
+    .recommended-container {
+      height: auto !important;
+      gap: 16px !important;
+      justify-content: center !important;
+    }
+
+    /* Enlarge the thumbnail glass card to 680x330px */
+    .thumbnail-glass-card {
+      width: 100% !important;
+      max-width: 680px !important;
+      height: 330px !important;
+      padding: 0 !important;
+      border-radius: 24px !important;
+      margin-bottom: 24px !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      overflow: hidden !important;
+    }
+
+    /* Proportional scaling of thumbnail inside card */
+    .recommended-thumbnail-wrapper {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      aspect-ratio: 220 / 136 !important;
+      border-radius: inherit !important;
+      overflow: hidden !important;
+      border: none !important;
+      box-shadow: none !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+
+    .buy-product-thumbnail {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain !important; /* Scale up without distortion or cropping */
+    }
+
+    .title-button-glass-card {
+      width: 100% !important;
+      max-width: 680px !important;
+      padding: 24px 32px !important;
+      border-radius: 32px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 20px !important;
+    }
+
+    .recommended-buy-btn {
+      /* Deep premium black gradient */
+      background: linear-gradient(135deg, #000000 0%, #111111 50%, #000000 100%) padding-box,
+                  linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%) border-box !important;
+      /* Intense black shadow */
+      box-shadow: 
+        0 12px 36px rgba(0, 0, 0, 0.95),
+        0 0 15px rgba(0, 0, 0, 0.85) !important;
+    }
+
+    .recommended-buy-btn:hover {
+      background: linear-gradient(135deg, #111111 0%, #1c1c1c 50%, #111111 100%) padding-box,
+                  linear-gradient(135deg, #fcf6ba 0%, #bf953f 25%, #fbf5b7 50%, #b38728 75%, #fcf6ba 100%) border-box !important;
+      box-shadow: 
+        0 16px 45px rgba(0, 0, 0, 0.98),
+        0 0 25px rgba(255, 215, 0, 0.4) !important;
+    }
+
+    .glass-card-element {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+      backdrop-filter: blur(30px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+      border: 1.5px solid rgba(218, 165, 32, 0.35) !important;
+      box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.3),
+        inset 0 10px 20px rgba(255, 255, 255, 0.08) !important;
+      animation: borderGlowSmall 8s infinite alternate ease-in-out !important;
+      box-sizing: border-box !important;
+    }
+
+    @keyframes borderGlowSmall {
+      0% {
+        border-color: rgba(218, 165, 32, 0.35) !important;
+        box-shadow:
+          0 16px 40px rgba(0, 0, 0, 0.5),
+          inset 0 1px 1px rgba(255, 255, 255, 0.3),
+          inset 0 10px 20px rgba(255, 255, 255, 0.08) !important;
+      }
+      100% {
+        border-color: rgba(255, 215, 0, 0.65) !important;
+        box-shadow:
+          0 16px 40px rgba(0, 0, 0, 0.5),
+          0 0 25px rgba(255, 215, 0, 0.2),
+          inset 0 1px 1px rgba(255, 255, 255, 0.4),
+          inset 0 10px 20px rgba(255, 215, 0, 0.08) !important;
+      }
+    }
+
+    /* Fullscreen Screen Video style inside iPhone mockup */
+    .phone-screen-video {
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      z-index: 1 !important;
+      opacity: 1 !important;
+      pointer-events: none !important;
+      transition: opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1) !important;
+    }
+
+    .phone-screen-video.active {
+      opacity: 1 !important;
+    }
+
+    .second-layer-title {
+      position: absolute !important;
+      top: -80px !important;
+      left: 50% !important;
+      transform: translateX(-50%);
+      font-family: 'Montserrat', sans-serif !important;
+      font-weight: 900 !important;
+      font-style: italic !important;
+      font-size: 3.5rem !important;
+      line-height: 1.15 !important;
+      text-align: center !important;
+      text-transform: uppercase !important;
+      letter-spacing: 3px !important;
+      color: #ffffff !important;
+      margin: 0 !important;
+      z-index: 10 !important;
+      pointer-events: none !important;
+      white-space: nowrap !important;
+    }
+
+    @media (max-width: 850px) {
+      .second-layer-title {
+        font-size: 1.5rem !important;
+        top: -50px !important;
+      }
+    }
+
+
+
+
+  </style>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="script.js?v=111" defer></script>
+</head>
+
+<body>
+
+  <!-- Animated Glass Liquid Logo Container -->
+  <div class="brand-logo-glass-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'});" style="cursor: pointer;">
+    <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="brand-logo-img">
+    <div class="brand-logo-text">
+      <div class="text-destiny">DESTINY</div>
+      <div class="text-rewards">REWARDS</div>
+    </div>
+  </div>
+
+  <!-- Sticky Liquid Glass Navigation Bar -->
+  <nav id="sticky-nav">
+    <div class="nav-sliding-bubble" id="nav-sliding-bubble"></div>
+    <ul class="sticky-nav-links">
+      <li>
+        <a href="#" class="sticky-nav-link" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+          <svg class="nav-home-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2.09c-.55 0-1.05.28-1.38.73L2.38 11.06c-.5.5-.14 1.36.57 1.36H5v6.5c0 1.1.9 2 2 2h3v-5c0-1.1.9-2 2-2s2 .9 2 2v5h3c1.1 0 2-.9 2-2v-6.5h2.05c.71 0 1.07-.86.57-1.36L13.38 2.82C13.05 2.37 12.55 2.09 12 2.09z" />
+          </svg>
+          HOME
+        </a>
+      </li>
+      <li>
+        <a href="buy.html" class="sticky-nav-link" id="nav-buy-link">
+          <img src="images/buy_icon_white_dollar.png" alt="Buy" class="nav-buy-icon">
+          BUY
+        </a>
+      </li>
+      <li>
+        <a href="challenge.html" class="sticky-nav-link" id="nav-challenge-link">
+          <svg class="nav-spin-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Wheel circle background -->
+            <circle cx="50" cy="48" r="40" fill="#6B8AFF" />
+            <!-- Wheel segments (white cuts) -->
+            <path d="M50 8 L50 48 L82 20Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M90 48 L50 48 L78 76Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M50 88 L50 48 L22 76Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M10 48 L50 48 L18 20Z" fill="rgba(255,255,255,0.92)" />
+            <!-- Center hub -->
+            <circle cx="50" cy="48" r="6" fill="#6B8AFF" stroke="rgba(255,255,255,0.92)" stroke-width="3" />
+            <!-- Pointer/flapper on left -->
+            <circle cx="12" cy="40" r="5" fill="rgba(255,255,255,0.92)" />
+            <!-- Stand/pedestal -->
+            <rect x="44" y="86" width="12" height="14" rx="2" fill="#6B8AFF" />
+            <path d="M32 100 Q50 95 68 100 L68 108 Q50 103 32 108Z" fill="#6B8AFF" />
+          </svg>
+          CHALLENGE
+        </a>
+      </li>
+      <li>
+        <a href="#second-layer" class="sticky-nav-link" id="nav-bid-link">
+          <img src="images/lock_cropped.png" alt="Lock" class="nav-lock-icon">
+          BID
+        </a>
+      </li>
+      <li>
+        <a href="#second-layer" class="sticky-nav-link" id="nav-free-link">
+          <img src="images/lock_cropped.png" alt="Lock" class="nav-lock-icon">
+          FOR FREE
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Hero Video Section -->
+  <section class="hero-video-section">
+    <div class="video-container">
+      <video id="gameplay-video" src="mp4/gameplay.mp4" autoplay muted loop playsinline></video>
+    </div>
+
+    <!-- CTA Overlay -->
+    <div class="cta-overlay">
+      <a href="#second-layer" class="scroll-down">
+        <svg class="scroll-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Scroll Spacer for Logo Transition (1/4 of layer size) -->
+  <div class="scroll-spacer">
+    <div class="marquee-container">
+      <div class="marquee-content">
+        <img src="images/key.png" alt="Steam Key">
+        <img src="images/destiny-3.png" alt="Destiny Rewards">
+        <img src="images/key.png" alt="Steam Key">
+        <img src="images/destiny-3.png" alt="Destiny Rewards">
+        <img src="images/key.png" alt="Steam Key">
+        <img src="images/destiny-3.png" alt="Destiny Rewards">
+        <img src="images/key.png" alt="Steam Key">
+        <img src="images/destiny-3.png" alt="Destiny Rewards">
+      </div>
+      <div class="marquee-content" aria-hidden="true">
+        <img src="images/key.png" alt="Steam Key">
+        <img src="images/destiny-3.png" alt="Destiny Rewards">
+        <img src="images/key.png" alt="Steam Key">
+        <img src="images/destiny-3.png" alt="Destiny Rewards">
+        <img src="images/key.png" alt="Steam Key">
+        <img src="images/destiny-3.png" alt="Destiny Rewards">
+        <img src="images/key.png" alt="Steam Key">
+        <img src="images/destiny-3.png" alt="Destiny Rewards">
+      </div>
+    </div>
+  </div>
+
+  <!-- Second Layer Section -->
+  <section class="second-layer-section" id="second-layer">
+    <div class="second-layer-content">
+      <!-- Sticky/Zoom Title -->
+      <h1 class="second-layer-title" id="scroll-sticky-title">UNLOCK YOUR NEXT ADVENTURE</h1>
+      <!-- iOS Lockscreen-style Notification Message on Left -->
+      <div class="phone-notification-card" id="phone-notification">
+        <div class="notification-header">
+          <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="notification-logo">
+          <span class="notification-app-name">DESTINY REWARDS</span>
+        </div>
+        <p class="notification-text">FIND YOUR PREFERRED ITEM ON BUY SECTION</p>
+        <a href="buy.html" class="notification-buy-btn"><img src="images/buy_icon_white_dollar.png" alt="Buy" class="notification-btn-icon">BUY</a>
+      </div>
+
+      <!-- Left Side Liquid Glass Slideshow Card (Phase 2) -->
+      <div class="phone-left-placeholder-glass-card" id="phone-left-placeholder">
+        <div class="glass-product-content">
+          <!-- Large Payment Method Slideshow -->
+          <div class="glass-product-banner-wrapper">
+            <img src="https://www.dropbox.com/scl/fi/jk5idllg0tp3c6m6vksyc/ChatGPT-Image-10-juil.-2026-02_33_33.png?rlkey=9et44yy79t5vx17oz0dnakszc&st=9bkyfuw8&dl=1" alt="Payment Method 1" class="glass-product-banner active">
+            <img id="binance-pay-banner" src="https://www.dropbox.com/scl/fi/71rhhmynyohq5725hn47r/BinanceBanner-removebg-preview.png?rlkey=ne9oih5o7lzmuec73x1g0w2dr&st=6225895u&dl=1" alt="Payment Method 2" class="glass-product-banner">
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Premium Glassmorphic Phone Frame Mockup -->
+      <div class="phone-frame-mockup">
+        <!-- Phone Notch / Dynamic Island -->
+        <div class="phone-notch"></div>
+        <!-- Inner Phone Screen Mockup -->
+        <div class="phone-screen-mockup">
+          <div class="phone-screen-shine"></div>
+          <!-- Fullscreen Loop Video (Phase 4 / End) -->
+          <video class="phone-screen-video" autoplay loop muted playsinline>
+            <source src="https://www.dropbox.com/scl/fi/2247do5hc4ipwk8qd1w6e/peddritorangel_pindown.io_1782864535.mp4?rlkey=1kqb0fzs5fa19zr2t94ie3g36&st=r6wnf2no&dl=1" type="video/mp4">
+            Your browser does not support the video tag.
+        </div>
+      </div>
+
+      <!-- Right Side Liquid Glass Placeholder Card -->
+      <div class="phone-placeholder-glass-card" id="phone-right-placeholder">
+        <div class="glass-product-content">
+          <!-- Large Game Banner Artwork Slideshow -->
+          <div class="glass-product-banner-wrapper">
+            <img src="https://www.dropbox.com/scl/fi/5nbb9o69m77rk5v1q1u2t/ChatGPT-Image-2-juil.-2026-21_58_47.png?rlkey=69amhmy7w6kr1qfrfvp09k4x4&st=w94d2idd&dl=1" alt="Lucky Premium Game 1X" class="glass-product-banner active">
+            <img src="https://www.dropbox.com/scl/fi/rldkidinhmj4dhsgg7pz0/ChatGPT-Image-3-juil.-2026-11_47_31.png?rlkey=enox6cwwyn7m2g6wbvjdcnc0w&st=46c9j8j9&dl=1" alt="Lucky Raiders Game 1X" class="glass-product-banner">
+            <img src="https://www.dropbox.com/scl/fi/v3o8m8owe9833orjoyhs9/EX-X1.png?rlkey=fs5lqr3431eysn4q1qb5s0b0b&st=sf5wdwzh&dl=1" alt="Lucky Expedition Game 1X" class="glass-product-banner">
+            <img src="https://www.dropbox.com/scl/fi/lo9btvpa2ibkm3df6oc1e/ChatGPT-Image-3-juil.-2026-11_04_18.png?rlkey=drar8uzbhbw5pnjauf552fn09&st=1p1avtgb&dl=1" alt="Lucky kingdom Game 1X" class="glass-product-banner">
+            <img src="https://www.dropbox.com/scl/fi/hq7cbrazuh0z92rm0bvar/ChatGPT-Image-2-juil.-2026-22_01_25.png?rlkey=u7n22rspxw8wzy5qc881cnd1t&st=d36q3tmp&e=1&dl=1" alt="Lucky Premium Game 2X" class="glass-product-banner">
+            <img src="https://www.dropbox.com/scl/fi/1w8vwqgkptipdzy4x8hfa/ChatGPT-Image-3-juil.-2026-11_50_28.png?rlkey=zo8z67s51333cvj9j9yl4zh31&st=asws56sb&dl=1" alt="Lucky Raiders Game 2X" class="glass-product-banner">
+            
+            <!-- Glass Liquid Circle (Heart favorite indicator) -->
+            <div class="favorite-heart-circle">
+              <svg class="favorite-heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- iOS Lockscreen-style Notification Message on Right -->
+      <div class="phone-right-notification-card" id="phone-right-notification">
+        <div class="notification-header">
+          <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="notification-logo">
+          <span class="notification-app-name">DESTINY REWARDS</span>
+        </div>
+        <p class="notification-text">CHECK OUT USING YOUR PREFERRED PAYMENT METHOD</p>
+        <a href="buy.html" class="notification-buy-btn"><img src="images/buy_icon_white_dollar.png" alt="Buy" class="notification-btn-icon">BUY</a>
+      </div>
+
+      <!-- iOS Lockscreen-style Notification Message 2 on Left (Phase 3) -->
+      <div class="phone-notification-card" id="phone-left-notification-2">
+        <div class="notification-header">
+          <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="notification-logo">
+          <span class="notification-app-name">DESTINY REWARDS</span>
+        </div>
+        <p class="notification-text">REDEEM YOUR KEYS AND ENJOY A NEW GAME EXPERIENCE</p>
+        <a href="buy.html" class="notification-buy-btn"><img src="images/buy_icon_white_dollar.png" alt="Buy" class="notification-btn-icon">BUY</a>
+      </div>
+
+      <!-- iOS Lockscreen-style Notification Message 3 on Left (Phase 4 / Final) -->
+      <div class="phone-notification-card" id="phone-left-notification-3">
+        <div class="notification-header">
+          <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="notification-logo">
+          <span class="notification-app-name">DESTINY REWARDS</span>
+        </div>
+        <p class="notification-text">JOIN US AND HELP US GROW OUR COMMUNITY</p>
+        <a href="https://t.me/Destinyrewards_bot" target="_blank" class="notification-buy-btn"><img src="https://www.dropbox.com/scl/fi/0c7uekuupio6rckmdf72u/telegram-white-icon.webp?rlkey=gwg7wb0xie3cr5kab7jdatjw4&st=m3d5ml2y&dl=1" alt="Telegram" class="notification-btn-icon">JOIN US</a>
+      </div>
+
+      <!-- Floating Glass Cards for Phase 3 -->
+      <div class="phone-small-glass-card" id="small-card-1">
+        <div class="glass-product-content">
+          <!-- Large Loop Video Wrapper -->
+          <div class="glass-product-banner-wrapper">
+            <video class="glass-product-banner active" autoplay loop muted playsinline style="object-fit: cover !important; width: 100% !important; height: 100% !important;">
+              <source src="https://www.dropbox.com/scl/fi/covlkish11k6k2xp7hyhz/weareforeal_pindown.io_1783457476.mp4?rlkey=bdrkgbw71bsvhdqfdeowp8mp3&st=bfr9orem&dl=1" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+      <div class="phone-small-glass-card" id="small-card-2">
+        <div class="glass-product-content">
+          <!-- Large Loop Video Wrapper -->
+          <div class="glass-product-banner-wrapper">
+            <video class="glass-product-banner active" autoplay loop muted playsinline style="object-fit: cover !important; width: 100% !important; height: 100% !important;">
+              <source src="https://www.dropbox.com/scl/fi/1bp0dxxzkjqxuxbwnh50u/weareforeal_pindown.io_1783457578.mp4?rlkey=yqsqtgvjqm4kmqm1msihtv90u&st=h9noovrb&dl=1" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+      <div class="phone-small-glass-card" id="small-card-3">
+        <div class="glass-product-content">
+          <!-- Large Loop Video Wrapper -->
+          <div class="glass-product-banner-wrapper">
+            <video class="glass-product-banner active" autoplay loop muted playsinline style="object-fit: cover !important; width: 100% !important; height: 100% !important;">
+              <source src="https://www.dropbox.com/scl/fi/1acegzkdqp8yxqme2t0cd/weareforeal_pindown.io_1783457615.mp4?rlkey=sxux52hkxj2rxhuo1u02rp468&st=jvjt757o&dl=1" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Third Layer Section: Frequently Asked Questions -->
+  <section class="portal-section" id="portal">
+    <div class="faq-accordion-container">
+      <h2 class="faq-accordion-title">Frequently Asked Questions</h2>
+      <div class="faq-accordion-list">
+        <div class="faq-accordion-item">
+          <div class="faq-accordion-header">
+            <span class="faq-accordion-question">1. What is DestinyRewards?</span>
+            <span class="faq-accordion-toggle">+</span>
+          </div>
+          <div class="faq-accordion-content">
+            <p>DestinyRewards is a digital marketplace that offers affordable digital products at some of the lowest prices available. We provide daily discounts, exclusive events, and special deals to help our customers get the best value. Our mission is to make premium digital products accessible to everyone through competitive pricing, secure purchases, and a smooth shopping experience.</p>
+          </div>
+        </div>
+        <div class="faq-accordion-item">
+          <div class="faq-accordion-header">
+            <span class="faq-accordion-question">2. What does DestinyRewards sell?</span>
+            <span class="faq-accordion-toggle">+</span>
+          </div>
+          <div class="faq-accordion-content">
+            <p>At the moment, DestinyRewards specializes in Random Game Keys, offering exciting mystery key products at affordable prices. As we continue to grow, we plan to expand our catalog with a wider range of gaming-related digital products, including game keys, gift cards, software licenses, in-game content, and more.</p>
+          </div>
+        </div>
+        <div class="faq-accordion-item">
+          <div class="faq-accordion-header">
+            <span class="faq-accordion-question">3. How can I get DestinyRewards products at the lowest price?</span>
+            <span class="faq-accordion-toggle">+</span>
+          </div>
+          <div class="faq-accordion-content">
+            <p>At the moment, you can save 10% by spinning the wheel in our Challenge section and claiming your discount reward. We're also working on exciting new features, including a Bidding section, where you'll be able to compete with other customers to win your favorite items at incredibly low prices, and a Free Rewards section, where you'll have the chance to claim selected products completely free of charge. Stay tuned for future updates and discover even more ways to save!</p>
+          </div>
+        </div>
+        <div class="faq-accordion-item">
+          <div class="faq-accordion-header">
+            <span class="faq-accordion-question">4. What payment methods does DestinyRewards support?</span>
+            <span class="faq-accordion-toggle">+</span>
+          </div>
+          <div class="faq-accordion-content">
+            <p>Currently, DestinyRewards accepts payments through Cryptocurrency and Binance Pay, providing fast, secure, and convenient checkout options. As we continue to grow, we plan to introduce additional payment methods, including credit and debit cards, PayPal, and other trusted payment solutions to make purchasing even easier.</p>
+          </div>
+        </div>
+        <div class="faq-accordion-item">
+          <div class="faq-accordion-header">
+            <span class="faq-accordion-question">5. How will I receive my items after purchasing?</span>
+            <span class="faq-accordion-toggle">+</span>
+          </div>
+          <div class="faq-accordion-content">
+            <p>Once your payment has been successfully confirmed, your purchased item will be delivered to the email address you provide during checkout. One of the advantages of DestinyRewards is our fast delivery system—most customers receive their digital code within just a few minutes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blue Half Layer Section -->
+  <section class="blue-half-layer">
+    <!-- Cloud Style Divider & Shadow -->
+    <div class="cloud-divider">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Shadow Cloud -->
+        <path d="M0,0 C100,45 190,65 290,65 C390,65 470,25 550,45 C630,65 710,85 810,85 C910,85 990,45 1070,55 C1150,65 1250,95 1350,75 C1400,65 1430,35 1440,0 Z" fill="rgba(0, 0, 0, 0.45)" transform="translate(0, 6)"></path>
+        <!-- Main Black Cloud -->
+        <path d="M0,0 C90,40 180,60 280,60 C380,60 460,20 540,40 C620,60 700,80 800,80 C900,80 980,40 1060,50 C1140,60 1240,90 1340,70 C1390,60 1420,30 1440,0 Z" fill="#000000"></path>
+      </svg>
+    </div>
+
+    <!-- Footer Content inside the Blue Layer -->
+    <div class="blue-layer-content">
+      <div class="blue-layer-left">
+        <!-- Site Logo & Social Links Row -->
+        <div class="blue-layer-logo-row">
+          <div class="blue-layer-logo-glass">
+            <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="blue-layer-logo-img">
+            <div class="blue-layer-logo-text">
+              <span class="blue-layer-text-destiny">DESTINY</span>
+              <span class="blue-layer-text-rewards">REWARDS</span>
+            </div>
+          </div>
+          <div class="blue-layer-socials">
+            <a href="https://t.me/Destinyrewards_bot" target="_blank" class="blue-layer-social-link" title="Telegram">
+              <img src="https://www.dropbox.com/scl/fi/0c7uekuupio6rckmdf72u/telegram-white-icon.webp?rlkey=gwg7wb0xie3cr5kab7jdatjw4&st=m3d5ml2y&dl=1" alt="Telegram">
+            </a>
+            <a href="#" class="blue-layer-social-link" title="Instagram">
+              <img src="https://www.dropbox.com/scl/fi/vqayt584oli4i16ela37h/instagram-white-icon.webp?rlkey=kmlvg9oy78dyfy115shmtsr7e&st=0z54w1rb&dl=1" alt="Instagram">
+            </a>
+            <a href="#" class="blue-layer-social-link" title="Facebook">
+              <img src="https://www.dropbox.com/scl/fi/pay7c8vo5xnt0syfwpowv/facebook-app-round-white-icon.webp?rlkey=svhxzcrct0hc3o8ta98lpeieq&st=a6orxjrm&dl=1" alt="Facebook">
+            </a>
+          </div>
+        </div>
+        <!-- Description -->
+        <p class="blue-layer-description">
+          DestinyRewards is a digital marketplace for gaming products, offering great deals, exclusive rewards, and affordable prices. We're happy to have you as part of our community!
+        </p>
+      </div>
+
+      <div class="blue-layer-right">
+        <!-- Navigation Card (Copy of the Liquid Glass Card) -->
+        <div class="blue-layer-nav-card">
+          <div class="blue-layer-nav-grid">
+            <a href="#" class="blue-layer-nav-link" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">HOME</a>
+            <a href="mailto:support@destinyrewards.com" class="blue-layer-nav-link">EMAIL US</a>
+            <a href="challenge.html" class="blue-layer-nav-link">CHALLENGE</a>
+            <a href="buy.html" class="blue-layer-nav-link">BUY</a>
+            <a href="#second-layer" class="blue-layer-nav-link" onclick="document.getElementById('nav-bid-link').click(); return false;">BID</a>
+            <a href="#second-layer" class="blue-layer-nav-link" onclick="document.getElementById('nav-free-link').click(); return false;">FOR FREE</a>
+          </div>
+        </div>
+        <!-- Copyright Info -->
+        <div class="blue-layer-rights">
+          Ⓒ 2026 DESTINY REWARDS. All Rights Reserved
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Backdrop Overlay -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+
+  <!-- Liquid Glass Centered Modal Message Panel -->
+  <div class="side-message-panel" id="side-message-panel">
+    <button class="side-message-close" id="close-side-message">&times;</button>
+    <img src="images/bid_unavailable.png" alt="Bid Section Coming Soon" class="modal-image-only">
+    <!-- Invisible overlay link positioned over the JOIN TELEGRAM button -->
+    <a href="https://t.me/Destinyrewards_bot" target="_blank" class="modal-telegram-overlay-link"
+      aria-label="Join Telegram"></a>
+  </div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999;"></canvas>
+</body>
+
+</html>

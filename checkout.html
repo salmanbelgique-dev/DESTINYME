@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destiny Rewards - Checkout</title>
+  <meta name="description" content="Destiny Rewards Secure Checkout Page">
+  <!-- Google Fonts: Montserrat Heavy Italic & Bangers -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=League+Spartan:wght@700;800;900&family=Montserrat:ital,wght@1,900&display=swap"
+    rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css?v=113">
+  <style>
+    /* Critical layout properties for immediate rendering on load (prevents FOUC/jumping) */
+    :root {
+      --logo-size: 96px;
+      --logo-target-left: 24px;
+      --logo-target-top: 16px;
+      --logo-expanded-width: 270px;
+      --logo-text-width: 160px;
+    }
+    @media (max-width: 768px) {
+      :root {
+        --logo-size: 72px;
+        --logo-target-left: 16px;
+        --logo-target-top: 12px;
+        --logo-expanded-width: 210px;
+        --logo-text-width: 120px;
+      }
+    }
+    .brand-logo-glass-container {
+      position: fixed !important;
+      top: var(--logo-target-top) !important;
+      left: var(--logo-target-left) !important;
+      width: var(--logo-expanded-width) !important;
+      height: var(--logo-size) !important;
+      transform: translate(0, 0) scale(0.85) !important;
+      animation: none !important;
+    }
+    .brand-logo-text {
+      animation: none !important;
+      opacity: 1 !important;
+      width: var(--logo-text-width) !important;
+      transform: translateX(0) !important;
+    }
+    #sticky-nav {
+      position: fixed !important;
+      top: calc(var(--logo-target-top) + (var(--logo-size) - 54px) / 2) !important;
+      right: var(--logo-target-left) !important;
+      transform: translateX(0) scale(0.85) !important;
+      opacity: 1 !important;
+      transition: none !important;
+    }
+    @media (max-width: 768px) {
+      #sticky-nav {
+        top: calc(var(--logo-target-top) + (var(--logo-size) - 38px) / 2) !important;
+      }
+    }
+  </style>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Import Map for Firebase Modules -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+        "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"
+      }
+    }
+  </script>
+  <!-- Firebase Initialization -->
+  <script src="firebase.js?v=105" type="module"></script>
+  <!-- JavaScript -->
+  <script src="script.js?v=105" defer></script>
+</head>
+
+<body class="buy-page-body">
+
+  <!-- Animated Glass Liquid Logo Container (Settle State) -->
+  <div class="brand-logo-glass-container" onclick="window.location.href='index.html';" style="animation: none; transform: translate(0, 0) scale(0.85); top: var(--logo-target-top); left: var(--logo-target-left); cursor: pointer;">
+    <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="brand-logo-img">
+    <div class="brand-logo-text">
+      <div class="text-destiny">DESTINY</div>
+      <div class="text-rewards">REWARDS</div>
+    </div>
+  </div>
+
+  <!-- Sticky Liquid Glass Navigation Bar (Visible State) -->
+  <nav id="sticky-nav" class="visible">
+    <div class="nav-sliding-bubble" id="nav-sliding-bubble"></div>
+    <ul class="sticky-nav-links">
+      <li>
+        <a href="index.html" class="sticky-nav-link">
+          <svg class="nav-home-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2.09c-.55 0-1.05.28-1.38.73L2.38 11.06c-.5.5-.14 1.36.57 1.36H5v6.5c0 1.1.9 2 2 2h3v-5c0-1.1.9-2 2-2s2 .9 2 2v5h3c1.1 0 2-.9 2-2v-6.5h2.05c.71 0 1.07-.86.57-1.36L13.38 2.82C13.05 2.37 12.55 2.09 12 2.09z" />
+          </svg>
+          HOME
+        </a>
+      </li>
+      <li>
+        <a href="buy.html" class="sticky-nav-link" id="nav-buy-link">
+          <img src="images/buy_icon_white_dollar.png" alt="Buy" class="nav-buy-icon">
+          BUY
+        </a>
+      </li>
+      <li>
+        <a href="challenge.html" class="sticky-nav-link" id="nav-challenge-link">
+          <svg class="nav-spin-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="48" r="40" fill="#6B8AFF" />
+            <path d="M50 8 L50 48 L82 20Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M90 48 L50 48 L78 76Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M50 88 L50 48 L22 76Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M10 48 L50 48 L18 20Z" fill="rgba(255,255,255,0.92)" />
+            <circle cx="50" cy="48" r="6" fill="#6B8AFF" stroke="rgba(255,255,255,0.92)" stroke-width="3" />
+            <circle cx="12" cy="40" r="5" fill="rgba(255,255,255,0.92)" />
+            <rect x="44" y="86" width="12" height="14" rx="2" fill="#6B8AFF" />
+            <path d="M32 100 Q50 95 68 100 L68 108 Q50 103 32 108Z" fill="#6B8AFF" />
+          </svg>
+          CHALLENGE
+        </a>
+      </li>
+      <li>
+        <a href="index.html#second-layer" class="sticky-nav-link" id="nav-bid-link">
+          <img src="images/lock_cropped.png" alt="Lock" class="nav-lock-icon">
+          BID
+        </a>
+      </li>
+      <li>
+        <a href="index.html#second-layer" class="sticky-nav-link" id="nav-free-link">
+          <img src="images/lock_cropped.png" alt="Lock" class="nav-lock-icon">
+          FOR FREE
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Checkout Section (Dark layout matching Buy section) -->
+  <section class="second-layer-section" id="buy-page">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+
+    <div class="buy-content-wrapper">
+      <!-- Checkout Header -->
+      <div class="buy-header-panel">
+        <h1 class="buy-title">CHECKOUT</h1>
+        <span class="buy-subtitle">SECURE PAYMENT</span>
+      </div>
+
+      <!-- Checkout Columns Grid -->
+      <div class="checkout-main-grid">
+        
+        <!-- Left Column: Product Details -->
+        <div class="checkout-details-panel">
+          <div class="checkout-product-card-preview">
+            <div class="checkout-thumb-box">
+              <img id="checkout-prod-img" src="images/product_placeholder.png" alt="Product Thumbnail" class="checkout-preview-thumbnail">
+            </div>
+            <div class="checkout-desc-box">
+              <h2 id="checkout-prod-title" class="checkout-product-title-text">Digital Key</h2>
+              <div class="buy-product-meta">
+                <span class="buy-product-badge badge-blue-translucent">Global</span>
+                <span class="buy-product-badge badge-blue-translucent">Steam Key</span>
+                <span class="buy-product-badge badge-blue-translucent">Instant Delivery</span>
+              </div>
+              <div class="checkout-price-preview">
+                <span class="checkout-price-label">Price:</span>
+                <span id="checkout-prod-price" class="checkout-price-value">45$</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Product Description (Left Side) -->
+          <div class="checkout-description-container">
+            <h3 class="checkout-sub-title">Product Information</h3>
+            
+            <div class="checkout-desc-section">
+              <span class="checkout-desc-label">Languages:</span>
+              <span class="checkout-desc-value">English</span>
+            </div>
+
+            <div class="checkout-desc-section">
+              <span class="checkout-desc-label">Key Features:</span>
+              <ul class="checkout-features-list">
+                <li>Over 100 games, including AAA hits</li>
+                <li>Metascore of at least 70 or at least 70% positive reviews on Steam</li>
+                <li>Games activated on Steam</li>
+                <li>No free games, DLCs, or demos</li>
+              </ul>
+            </div>
+
+            <div class="checkout-desc-section">
+              <h4 class="checkout-desc-heading">Dozens of possibilities</h4>
+              <p class="checkout-description-text">
+                Lucky Premium Game is the best choice for players who want to play something new but don't know which games they should pick. Allow fate to choose your new, potentially favorite title for you. The pool of Lucky Premium Games includes about 100 games and constantly increases as new games are added to the collection. Hence, fate can pick for you one of the latest AAA releases.
+              </p>
+            </div>
+
+            <div class="checkout-desc-section">
+              <h4 class="checkout-desc-heading">No mediocre titles</h4>
+              <p class="checkout-description-text">
+                Lucky Premium Games are activated on Steam. Therefore, before adding it to your library, you don't know what title you get. However, you can rest assured that this is a good or great game because only releases with a Metascore of 70+ or at least 70% positive Steam reviews qualify for Lucky Premium Games.
+              </p>
+            </div>
+
+            <!-- Warning policy section (For all products) -->
+            <div class="checkout-policy-alert">
+              <i class="policy-icon" data-lucide="alert-triangle"></i>
+              <span class="checkout-policy-text">Random games cannot be exchanged or returned.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Payment Form -->
+        <div class="checkout-action-panel">
+          <form id="checkout-form" class="checkout-billing-form">
+            <h3 class="checkout-sub-title">Billing & Delivery</h3>
+            
+            <!-- Email Input -->
+            <div class="checkout-input-group">
+              <label for="checkout-email" class="checkout-input-label">Email Address</label>
+              <input type="email" id="checkout-email" class="checkout-text-input" placeholder="you@example.com" required>
+              <span class="checkout-input-help">Your digital product key will be delivered to this email.</span>
+            </div>
+
+            <!-- Payment Method Selector -->
+            <div class="checkout-input-group">
+              <label class="checkout-input-label">Select Payment Method</label>
+              <div class="payment-method-selector-grid">
+                
+                <!-- cryptocurrency card -->
+                <div class="payment-method-card active" data-method="Cryptocurrency">
+                  <div class="payment-method-icon-row" style="background: transparent;">
+                    <img src="https://www.dropbox.com/scl/fi/vf7g6w3g2uzm3ejp82ryn/unnamed-2.webp?rlkey=w8cz9w05799m2xx3y15hipz7i&st=eegj9c4r&dl=1" class="payment-icon" alt="Crypto Pay" style="width: 48px; height: 48px; object-fit: contain; border-radius: 50%;">
+                  </div>
+                  <span class="payment-method-name">Crypto Pay</span>
+                  <span class="payment-method-sub">BTC, ETH, LTC, USDT,ETC.....</span>
+                </div>
+
+                <!-- binance pay card -->
+                <div class="payment-method-card" data-method="Binance Pay">
+                  <div class="payment-method-icon-row">
+                    <svg class="payment-icon binance-svg-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
+                      <path d="M16.624 13.92l2.717 2.716-7.353 7.353-7.352-7.352 2.717-2.717 4.636 4.66 4.635-4.66zm4.637-4.636L24 12l-2.715 2.716L18.568 12l2.693-2.716zm-9.272 0l2.716 2.692-2.717 2.717L9.272 12l2.716-2.715zm-9.273 0L5.41 12l-2.692 2.692L0 12l2.716-2.716zM11.99.01l7.352 7.33-2.717 2.715-4.636-4.636-4.635 4.66-2.717-2.716z"/>
+                    </svg>
+                  </div>
+                  <span class="payment-method-name">BinancePay</span>
+                  <span class="payment-method-sub">Pay with your BinancePay</span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Binance ID Field (Hidden by default, shown when Binance Pay is active) -->
+            <div class="checkout-input-group" id="binance-id-container" style="display: none;">
+              <label for="checkout-binance-id" class="checkout-input-label">Binance ID (Pay ID)</label>
+              <input type="text" id="checkout-binance-id" class="checkout-text-input" placeholder="Enter your Binance Pay ID">
+              <span class="checkout-input-help">Provide your Binance Pay ID to verify the payment receipt.</span>
+            </div>
+
+            <!-- Order Summary Info -->
+            <div class="checkout-summary-box">
+              <div class="checkout-summary-line">
+                <span>Subtotal:</span>
+                <span id="checkout-pay-price">45$</span>
+              </div>
+              <div class="checkout-summary-line">
+                <span>Processing Fee:</span>
+                <span>0.00$</span>
+              </div>
+              <div class="checkout-summary-total">
+                <span>Total Payment:</span>
+                <span id="checkout-total-price">45$</span>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <button type="submit" class="checkout-pay-btn">PAY NOW</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section (matching buy.html exactly) -->
+  <section class="blue-half-layer buy-page-footer">
+    <!-- Cloud Style Divider -->
+    <div class="cloud-divider">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Main Black Cloud (filled bottom) -->
+        <path d="M0,120 L0,0 C90,40 180,60 280,60 C380,60 460,20 540,40 C620,60 700,80 800,80 C900,80 980,40 1060,50 C1140,60 1240,90 1340,70 C1390,60 1420,30 1440,0 L1440,120 Z" fill="#000000"></path>
+      </svg>
+    </div>
+
+    <!-- Footer Content Wrapper -->
+    <div class="buy-footer-body-wrapper">
+      <div class="blue-layer-content">
+        <div class="blue-layer-left">
+          <!-- Site Logo & Social Links Row -->
+          <div class="blue-layer-logo-row">
+            <div class="blue-layer-logo-glass">
+              <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="blue-layer-logo-img">
+              <div class="blue-layer-logo-text">
+                <span class="blue-layer-text-destiny">DESTINY</span>
+                <span class="blue-layer-text-rewards">REWARDS</span>
+              </div>
+            </div>
+            <div class="blue-layer-socials">
+              <a href="https://t.me/Destinyrewards_bot" target="_blank" class="blue-layer-social-link" title="Telegram">
+                <img src="https://www.dropbox.com/scl/fi/0c7uekuupio6rckmdf72u/telegram-white-icon.webp?rlkey=gwg7wb0xie3cr5kab7jdatjw4&st=m3d5ml2y&dl=1" alt="Telegram">
+              </a>
+              <a href="#" class="blue-layer-social-link" title="Instagram">
+                <img src="https://www.dropbox.com/scl/fi/vqayt584oli4i16ela37h/instagram-white-icon.webp?rlkey=kmlvg9oy78dyfy115shmtsr7e&st=0z54w1rb&dl=1" alt="Instagram">
+              </a>
+              <a href="#" class="blue-layer-social-link" title="Facebook">
+                <img src="https://www.dropbox.com/scl/fi/pay7c8vo5xnt0syfwpowv/facebook-app-round-white-icon.webp?rlkey=svhxzcrct0hc3o8ta98lpeieq&st=a6orxjrm&dl=1" alt="Facebook">
+              </a>
+            </div>
+          </div>
+          <!-- Description -->
+          <p class="blue-layer-description">
+            DestinyRewards is a digital marketplace for gaming products, offering great deals, exclusive rewards, and affordable prices. We're happy to have you as part of our community!
+          </p>
+        </div>
+
+        <div class="blue-layer-right">
+          <!-- Navigation Card (Copy of the Liquid Glass Card) -->
+          <div class="blue-layer-nav-card">
+            <div class="blue-layer-nav-grid">
+              <a href="index.html" class="blue-layer-nav-link">HOME</a>
+              <a href="mailto:support@destinyrewards.com" class="blue-layer-nav-link">EMAIL US</a>
+              <a href="challenge.html" class="blue-layer-nav-link">CHALLENGE</a>
+              <a href="buy.html" class="blue-layer-nav-link">BUY</a>
+              <a href="index.html#second-layer" class="blue-layer-nav-link">BID</a>
+              <a href="index.html#second-layer" class="blue-layer-nav-link">FOR FREE</a>
+            </div>
+          </div>
+          <!-- Copyright Info -->
+          <div class="blue-layer-rights">
+            Ⓒ 2026 DESTINY REWARDS. All Rights Reserved
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Backdrop Overlay -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+
+</body>
+
+</html>
