@@ -3571,7 +3571,7 @@ html {
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   z-index: 100;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   padding: 40px;
