@@ -558,7 +558,7 @@ html {
 
 /* Challenge Page Specific Background override */
 #challenge-page {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.98) 12%, rgba(0, 0, 0, 0.2) 35%, rgba(0, 0, 0, 0.85) 100%), url('images/challenge_bg.png') no-repeat center center !important;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.98) 12%, rgba(0, 0, 0, 0.2) 35%, rgba(0, 0, 0, 0.85) 100%), url('images/challenge_bg.jpg') no-repeat center center !important;
   background-size: cover !important;
   height: 100vh !important;
   min-height: 100vh !important;
@@ -3966,6 +3966,11 @@ html {
 .challenge-page-body {
   overflow: hidden !important;
   height: 100vh !important;
+  background-color: #050508 !important; /* Stage dark backdrop color to prevent white flash bleeding through transparent gradient stops */
+}
+
+.buy-page-body {
+  background-color: #040613 !important; /* Buy page theme color fallback */
 }
 
 /* Disable intro animations and initial transitions on the challenge and buy pages to prevent re-load jumping/sliding */
