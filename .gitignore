@@ -3,3 +3,5 @@ node_modules/
 Thumbs.db
 *.log
 .gemini/
+user_recording.mp4
+video.mp4
