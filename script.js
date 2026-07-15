@@ -29,7 +29,9 @@ function checkDiscountExpiration() {
       }
 
       // If we are currently on the discount page, immediately redirect to buy.html
-      if (window.location.pathname.includes("discount-d9f2e3a8b4.html")) {
+      const isDiscountPage = window.location.pathname.includes("discount-d9f2e3a8b4.html") || 
+                             window.location.pathname.includes("discount-d9f2e3a8b4");
+      if (isDiscountPage) {
         window.location.replace("buy.html");
       }
 
@@ -133,10 +135,17 @@ function initNavigationBubble() {
     });
   });
 
+  const path = window.location.pathname;
+  const isChallengePage = path.includes('challenge.html') || path.endsWith('/challenge') || path.includes('/challenge.html');
+  const isBuyPage = path.includes('buy.html') || path.endsWith('/buy') || path.includes('/buy.html') ||
+                    path.includes('discount-d9f2e3a8b4.html') || path.includes('discount-d9f2e3a8b4') ||
+                    path.includes('checkout.html') || path.endsWith('/checkout') || path.includes('/checkout.html');
+  const isHomePage = !isChallengePage && !isBuyPage;
+
   // Highlight HOME, CHALLENGE, or BUY on page load based on current page
-  if (window.location.pathname.includes('challenge.html')) {
+  if (isChallengePage) {
     setActiveLink(links.challenge);
-  } else if (window.location.pathname.includes('buy.html') || window.location.pathname.includes('discount-d9f2e3a8b4.html') || window.location.pathname.includes('checkout.html')) {
+  } else if (isBuyPage) {
     setActiveLink(links.buy);
   } else {
     setActiveLink(links.home);
@@ -152,10 +161,6 @@ function initNavigationBubble() {
 
   // Watch for scroll position: if scrolled close to top, reset active link to HOME (only on home page)
   window.addEventListener('scroll', () => {
-    const isHomePage = !window.location.pathname.includes('challenge.html') && 
-                       !window.location.pathname.includes('buy.html') && 
-                       !window.location.pathname.includes('discount-d9f2e3a8b4.html') && 
-                       !window.location.pathname.includes('checkout.html');
     if (isHomePage && window.scrollY < 80) {
       const currentActive = document.querySelector('.sticky-nav-link.active');
       if (currentActive !== links.home) {
@@ -2367,7 +2372,10 @@ document.addEventListener("DOMContentLoaded", () => {
   handleRedirectResult();
 
   // Initialize event song background music if on challenge page
-  if (window.location.pathname.includes('challenge.html')) {
+  const isChallengePage = window.location.pathname.includes('challenge.html') || 
+                          window.location.pathname.endsWith('/challenge') || 
+                          window.location.pathname.includes('/challenge.html');
+  if (isChallengePage) {
     initEventSong();
   }
 });
@@ -2881,7 +2889,10 @@ function initPurchaseButtons() {
 
 function initCheckoutPage() {
   // Check if we are on checkout page
-  if (!window.location.pathname.includes("checkout.html")) return;
+  const isCheckoutPage = window.location.pathname.includes("checkout.html") || 
+                         window.location.pathname.endsWith("/checkout") || 
+                         window.location.pathname.includes("/checkout.html");
+  if (!isCheckoutPage) return;
 
   // Retrieve details
   let title = localStorage.getItem("checkout_title");
