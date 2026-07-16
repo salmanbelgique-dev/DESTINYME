@@ -2031,6 +2031,9 @@ function handleRedirectResult() {
 }
 
 function logoutGoogle() {
+  const username = localStorage.getItem("profileName") || "Guest";
+  const avatarUrl = localStorage.getItem("profileLogo") || "";
+
   // Create backdrop container
   const backdrop = document.createElement("div");
   backdrop.id = "custom-logout-modal-backdrop";
@@ -2078,8 +2081,17 @@ function logoutGoogle() {
         <line x1="21" y1="12" x2="9" y2="12"></line>
       </svg>
     </div>
-    <h3 style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.45rem; color: #ffffff; margin: 0 0 12px 0; letter-spacing: 0.5px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">SIGN OUT</h3>
-    <p style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; color: rgba(255, 255, 255, 0.7); margin: 0 0 28px 0; line-height: 1.6; font-weight: 500;">Are you sure you want to sign out from your account?</p>
+    <h3 style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.45rem; color: #ffffff; margin: 0 0 16px 0; letter-spacing: 0.5px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">SIGN OUT</h3>
+    
+    <!-- Profile preview container (Glass style) -->
+    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 18px 24px; margin: 0 auto 22px auto; max-width: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.25); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+      <!-- Profile Logo/Avatar -->
+      <img src="${avatarUrl}" alt="Profile Logo" style="width: 72px; height: 72px; border-radius: 50%; border: 2.5px solid rgba(255, 255, 255, 0.18); object-fit: cover; margin-bottom: 10px; box-shadow: 0 5px 12px rgba(0,0,0,0.45);">
+      <!-- Username -->
+      <span style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.08rem; color: #ffffff; letter-spacing: 0.3px; word-break: break-all;">${username}</span>
+    </div>
+
+    <p style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; color: rgba(255, 255, 255, 0.65); margin: 0 0 28px 0; line-height: 1.6; font-weight: 500;">Are you sure you want to sign out from your account?</p>
     <div style="display: flex; gap: 14px; justify-content: center; width: 100%;">
       <button id="logout-confirm-cancel" style="flex: 1; background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.9); border: 1.5px solid rgba(255, 255, 255, 0.15); padding: 13px 20px; border-radius: 14px; font-weight: 800; cursor: pointer; transition: all 0.2s ease; font-family: 'Montserrat', sans-serif; font-size: 0.88rem; letter-spacing: 0.5px;">CANCEL</button>
       <button id="logout-confirm-yes" style="flex: 1; background: linear-gradient(135deg, #ef4444, #b91c1c); color: #ffffff; border: none; padding: 13px 20px; border-radius: 14px; font-weight: 800; cursor: pointer; transition: all 0.2s ease; font-family: 'Montserrat', sans-serif; font-size: 0.88rem; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);">SIGN OUT</button>
