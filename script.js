@@ -2074,21 +2074,24 @@ function logoutGoogle() {
 
   // Add content HTML
   modal.innerHTML = `
-    <div style="width: 54px; height: 54px; background: rgba(239, 68, 68, 0.15); border: 1.5px solid rgba(239, 68, 68, 0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; color: #ef4444;">
-      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-        <polyline points="16 17 21 12 16 7"></polyline>
-        <line x1="21" y1="12" x2="9" y2="12"></line>
-      </svg>
+    <!-- Header Row: SIGN OUT text on the left, Red Icon on the right (both smaller) -->
+    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 22px;">
+      <h3 style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.22rem; color: #ffffff; margin: 0; letter-spacing: 0.5px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">SIGN OUT</h3>
+      <div style="width: 38px; height: 38px; background: rgba(239, 68, 68, 0.15); border: 1.5px solid rgba(239, 68, 68, 0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ef4444; flex-shrink: 0;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </div>
     </div>
-    <h3 style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.45rem; color: #ffffff; margin: 0 0 16px 0; letter-spacing: 0.5px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">SIGN OUT</h3>
     
-    <!-- Profile preview container (Glass style) -->
-    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 18px 24px; margin: 0 auto 22px auto; max-width: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.25); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-      <!-- Profile Logo/Avatar -->
-      <img src="${avatarUrl}" alt="Profile Logo" style="width: 72px; height: 72px; border-radius: 50%; border: 2.5px solid rgba(255, 255, 255, 0.18); object-fit: cover; margin-bottom: 10px; box-shadow: 0 5px 12px rgba(0,0,0,0.45);">
-      <!-- Username -->
-      <span style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.08rem; color: #ffffff; letter-spacing: 0.3px; word-break: break-all;">${username}</span>
+    <!-- Profile preview container (Glass style: Username on the left, Logo on the right and bigger) -->
+    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 15px 22px; margin: 0 auto 22px auto; max-width: 290px; display: flex; align-items: center; justify-content: space-between; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.25); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-sizing: border-box;">
+      <!-- Username on the left -->
+      <span style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.15rem; color: #ffffff; letter-spacing: 0.3px; text-align: left; word-break: break-all; margin-right: 15px;">${username}</span>
+      <!-- Profile Logo/Avatar on the right (bigger) -->
+      <img src="${avatarUrl}" alt="Profile Logo" style="width: 82px; height: 82px; border-radius: 50%; border: 2.5px solid rgba(255, 255, 255, 0.18); object-fit: cover; box-shadow: 0 5px 12px rgba(0,0,0,0.45); flex-shrink: 0;">
     </div>
 
     <p style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; color: rgba(255, 255, 255, 0.65); margin: 0 0 28px 0; line-height: 1.6; font-weight: 500;">Are you sure you want to sign out from your account?</p>
