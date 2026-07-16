@@ -2087,9 +2087,9 @@ function logoutGoogle() {
     </div>
     
     <!-- Profile preview container (Glass style: Username on the left, Logo on the right and bigger) -->
-    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 15px 22px; margin: 0 auto 22px auto; max-width: 290px; display: flex; align-items: center; justify-content: space-between; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.25); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-sizing: border-box;">
+    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 15px 22px; margin: 0 auto 22px auto; max-width: 340px; display: flex; align-items: center; justify-content: space-between; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.25); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-sizing: border-box; width: 100%;">
       <!-- Username on the left -->
-      <span style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.15rem; color: #ffffff; letter-spacing: 0.3px; text-align: left; word-break: break-all; margin-right: 15px;">${username}</span>
+      <span style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.12rem; color: #ffffff; letter-spacing: 0.3px; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 190px;" title="${username}">${username}</span>
       <!-- Profile Logo/Avatar on the right (bigger) -->
       <img src="${avatarUrl}" alt="Profile Logo" style="width: 82px; height: 82px; border-radius: 50%; border: 2.5px solid rgba(255, 255, 255, 0.18); object-fit: cover; box-shadow: 0 5px 12px rgba(0,0,0,0.45); flex-shrink: 0;">
     </div>
