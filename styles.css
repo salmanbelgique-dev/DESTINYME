@@ -3444,7 +3444,7 @@ html {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  margin-right: 15px; /* Spacing between name/ID and circle */
+  margin-right: 6px; /* Spacing between name/ID and circle */
 }
 
 .profile-name {
@@ -3527,7 +3527,7 @@ html {
     height: 14px;
   }
   .profile-text-container {
-    margin-right: 10px;
+    margin-right: 4px;
   }
   .profile-name {
     font-size: 0.8rem;
