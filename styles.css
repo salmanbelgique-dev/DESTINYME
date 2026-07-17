@@ -5455,24 +5455,24 @@ html {
 .buy-logged-out-state {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 30px;
-  padding: 6px 86px 6px 78px;
+  border-radius: 40px;
+  padding: 8px 112px 8px 101px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
 @media (max-width: 768px) {
   .buy-logged-out-state {
-    padding: 6px 16px 6px 8px;
+    padding: 8px 21px 8px 10px;
   }
 }
 
 .buy-avatar-placeholder {
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -5480,18 +5480,23 @@ html {
 .buy-google-signin-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: #ffffff;
   color: #1f2937;
   border: none;
-  padding: 6px 14px;
-  border-radius: 20px;
+  padding: 8px 18px;
+  border-radius: 26px;
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 1.04rem;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.buy-google-signin-btn svg {
+  width: 21px !important;
+  height: 21px !important;
 }
 
 .buy-google-signin-btn:hover {
