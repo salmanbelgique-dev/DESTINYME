@@ -5455,16 +5455,19 @@ html {
 .buy-logged-out-state {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 12px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 30px;
-  padding: 6px 16px 6px 8px;
+  padding: 6px 86px 6px 78px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  width: 320px;
-  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .buy-logged-out-state {
+    padding: 6px 16px 6px 8px;
+  }
 }
 
 .buy-avatar-placeholder {
