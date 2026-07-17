@@ -1596,11 +1596,11 @@ function handleLoggedInUser(user) {
   const photoURL = user.photoURL || generateGoogleAvatar(name.charAt(0), "#1a73e8");
 
   // Show a loading text on sign-in button
-  const signInBtn = document.getElementById("google-signin-btn");
+  const signInBtn = document.getElementById("google-signin-btn") || document.getElementById("buy-google-signin-btn");
   if (signInBtn) {
     signInBtn.disabled = true;
     signInBtn.style.opacity = "0.7";
-    const btnText = signInBtn.querySelector(".google-btn-text");
+    const btnText = signInBtn.querySelector(".google-btn-text") || signInBtn.querySelector("span");
     if (btnText) btnText.textContent = "Completing sign-in...";
   }
 
@@ -1976,11 +1976,11 @@ function showGoogleLogin() {
     return;
   }
 
-  const signInBtn = document.getElementById("google-signin-btn");
+  const signInBtn = document.getElementById("google-signin-btn") || document.getElementById("buy-google-signin-btn");
   if (signInBtn) {
     signInBtn.disabled = true;
     signInBtn.style.opacity = "0.7";
-    const btnText = signInBtn.querySelector(".google-btn-text");
+    const btnText = signInBtn.querySelector(".google-btn-text") || signInBtn.querySelector("span");
     if (btnText) btnText.textContent = "Opening Google popup...";
   }
 
@@ -1991,8 +1991,10 @@ function showGoogleLogin() {
         if (signInBtn) {
           signInBtn.disabled = false;
           signInBtn.style.opacity = "1";
-          const btnText = signInBtn.querySelector(".google-btn-text");
-          if (btnText) btnText.textContent = "Sign up with Google";
+          const btnText = signInBtn.querySelector(".google-btn-text") || signInBtn.querySelector("span");
+          if (btnText) {
+            btnText.textContent = signInBtn.id === "buy-google-signin-btn" ? "Sign in with Google" : "Sign up with Google";
+          }
         }
         return;
       }
@@ -2005,8 +2007,10 @@ function showGoogleLogin() {
       if (signInBtn) {
         signInBtn.disabled = false;
         signInBtn.style.opacity = "1";
-        const btnText = signInBtn.querySelector(".google-btn-text");
-        if (btnText) btnText.textContent = "Sign up with Google";
+        const btnText = signInBtn.querySelector(".google-btn-text") || signInBtn.querySelector("span");
+        if (btnText) {
+          btnText.textContent = signInBtn.id === "buy-google-signin-btn" ? "Sign in with Google" : "Sign up with Google";
+        }
       }
     });
 }
@@ -2246,136 +2250,183 @@ function initProfileWidget() {
   const container = document.getElementById("challenge-container");
   const profileWidget = document.querySelector(".user-profile-widget");
 
-  if (!isLoggedIn) {
-    // Show signup gate overlay, hide profile widget and add logged-out class to hide content
-    if (container) container.classList.add("logged-out");
-    if (signupGate) signupGate.style.display = "flex";
-    if (profileWidget) profileWidget.style.display = "none";
-    return;
+  // Handle Challenge Page Widget States
+  if (profileWidget || container || signupGate) {
+    if (!isLoggedIn) {
+      if (container) container.classList.add("logged-out");
+      if (signupGate) signupGate.style.display = "flex";
+      if (profileWidget) profileWidget.style.display = "none";
+    } else {
+      if (container) container.classList.remove("logged-out");
+      if (signupGate) signupGate.style.display = "none";
+      if (profileWidget) profileWidget.style.display = "flex";
+    }
   }
 
-  // User is logged in: hide signup gate overlay, show profile widget and remove logged-out class
-  if (container) container.classList.remove("logged-out");
-  if (signupGate) signupGate.style.display = "none";
-  if (profileWidget) profileWidget.style.display = "flex";
-
-  // Refresh Spin Stats UI
-  if (typeof updateSpinStatsUI === "function") {
+  // Refresh Spin Stats UI (only if logged in)
+  if (isLoggedIn && typeof updateSpinStatsUI === "function") {
     updateSpinStatsUI();
   }
 
   const storedName = localStorage.getItem("profileName") || "Guest";
   const storedId = localStorage.getItem("profileId") || "ID: -----";
-  
-  const nameEl = document.getElementById("profile-name");
-  const idEl = document.getElementById("profile-id");
-  
-  if (nameEl) {
-    nameEl.textContent = storedName;
-    nameEl.title = ""; // Remove tooltip
-  }
-
-  if (idEl) {
-    idEl.textContent = storedId;
-  }
-
   const storedLogo = localStorage.getItem("profileLogo");
-  const avatarImg = document.getElementById("profile-avatar-img");
-  const placeholderSvg = document.getElementById("profile-avatar-placeholder");
-  const avatarContainer = document.getElementById("profile-avatar-container");
-  const fileInput = document.getElementById("profile-avatar-input");
 
-  if (storedLogo && avatarImg && placeholderSvg) {
-    // Reset onerror to prevent loops
-    avatarImg.onerror = null;
+  // Handle Challenge Page values (only if logged in)
+  if (isLoggedIn) {
+    const nameEl = document.getElementById("profile-name");
+    const idEl = document.getElementById("profile-id");
+    if (nameEl) {
+      nameEl.textContent = storedName;
+      nameEl.title = "";
+    }
+    if (idEl) {
+      idEl.textContent = storedId;
+    }
 
-    avatarImg.onerror = () => {
-      console.warn("Google profile photo blocked or failed to load. Using initials avatar fallback.");
+    const avatarImg = document.getElementById("profile-avatar-img");
+    const placeholderSvg = document.getElementById("profile-avatar-placeholder");
+    const avatarContainer = document.getElementById("profile-avatar-container");
+    const fileInput = document.getElementById("profile-avatar-input");
+
+    if (storedLogo && avatarImg && placeholderSvg) {
       avatarImg.onerror = null;
-      const fallbackLogo = generateGoogleAvatar(storedName.charAt(0), "#1a73e8");
-      avatarImg.src = fallbackLogo;
-      localStorage.setItem("profileLogo", fallbackLogo);
-      syncProfileToFirebase();
-    };
+      avatarImg.onerror = () => {
+        console.warn("Google profile photo blocked or failed to load. Using initials avatar fallback.");
+        avatarImg.onerror = null;
+        const fallbackLogo = generateGoogleAvatar(storedName.charAt(0), "#1a73e8");
+        avatarImg.src = fallbackLogo;
+        localStorage.setItem("profileLogo", fallbackLogo);
+        syncProfileToFirebase();
+      };
+      avatarImg.src = storedLogo;
+      avatarImg.style.display = "block";
+      placeholderSvg.style.display = "none";
+    } else if (avatarImg && placeholderSvg) {
+      avatarImg.style.display = "none";
+      placeholderSvg.style.display = "block";
+    }
 
-    avatarImg.src = storedLogo;
-    avatarImg.style.display = "block";
-    placeholderSvg.style.display = "none";
-  } else if (avatarImg && placeholderSvg) {
-    avatarImg.style.display = "none";
-    placeholderSvg.style.display = "block";
-  }
+    // Handle click on logout button
+    const logoutBtn = document.getElementById("profile-logout-btn");
+    if (logoutBtn && !logoutBtn.dataset.listened) {
+      logoutBtn.dataset.listened = "true";
+      logoutBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        logoutGoogle();
+      });
+    }
 
-  // Handle click on logout button
-  const logoutBtn = document.getElementById("profile-logout-btn");
-  if (logoutBtn && !logoutBtn.dataset.listened) {
-    logoutBtn.dataset.listened = "true";
-    logoutBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      logoutGoogle();
-    });
-  }
-
-  // Handle single click (file upload) vs double click (logout)
-  if (avatarContainer && fileInput && !avatarContainer.dataset.listened) {
-    avatarContainer.dataset.listened = "true";
-    let clickTimer = null;
-    
-    avatarContainer.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (clickTimer) {
-        clearTimeout(clickTimer);
-        clickTimer = null;
-        return;
-      }
-      clickTimer = setTimeout(() => {
-        clickTimer = null;
-        fileInput.click();
-      }, 250);
-    });
-
-    avatarContainer.addEventListener("dblclick", (e) => {
-      e.preventDefault();
-      if (clickTimer) {
-        clearTimeout(clickTimer);
-        clickTimer = null;
-      }
-      logoutGoogle();
-    });
-
-    fileInput.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        if (!file.type.startsWith("image/")) {
-          alert("Please upload an image file!");
+    // Handle single click (file upload) vs double click (logout)
+    if (avatarContainer && fileInput && !avatarContainer.dataset.listened) {
+      avatarContainer.dataset.listened = "true";
+      let clickTimer = null;
+      
+      avatarContainer.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (clickTimer) {
+          clearTimeout(clickTimer);
+          clickTimer = null;
           return;
         }
+        clickTimer = setTimeout(() => {
+          clickTimer = null;
+          fileInput.click();
+        }, 250);
+      });
 
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          const base64Data = event.target.result;
-          try {
-            localStorage.setItem("profileLogo", base64Data);
-            if (avatarImg && placeholderSvg) {
-              avatarImg.src = base64Data;
-              avatarImg.style.display = "block";
-              placeholderSvg.style.display = "none";
-            }
-            syncProfileToFirebase();
-          } catch (err) {
-            console.error("Failed to save image to localStorage:", err);
-            alert("Image is too large! Please upload a smaller image under 2MB.");
+      avatarContainer.addEventListener("dblclick", (e) => {
+        e.preventDefault();
+        if (clickTimer) {
+          clearTimeout(clickTimer);
+          clickTimer = null;
+        }
+        logoutGoogle();
+      });
+
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          if (!file.type.startsWith("image/")) {
+            alert("Please upload an image file!");
+            return;
           }
-        };
-        reader.readAsDataURL(file);
+
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            const base64Data = event.target.result;
+            try {
+              localStorage.setItem("profileLogo", base64Data);
+              if (avatarImg && placeholderSvg) {
+                avatarImg.src = base64Data;
+                avatarImg.style.display = "block";
+                placeholderSvg.style.display = "none";
+              }
+              syncProfileToFirebase();
+            } catch (err) {
+              console.error("Failed to save image to localStorage:", err);
+              alert("Image is too large! Please upload a smaller image under 2MB.");
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+  }
+
+  // Handle Buy Page Profile Widget States & Values (independent of page routing)
+  const buyProfileWidget = document.getElementById("buy-profile-widget");
+  if (buyProfileWidget) {
+    const buyLoggedOut = document.getElementById("buy-logged-out-state");
+    const buyLoggedIn = document.getElementById("buy-logged-in-state");
+    const buyName = document.getElementById("buy-profile-name");
+    const buyId = document.getElementById("buy-profile-id");
+    const buyAvatarImg = document.getElementById("buy-profile-avatar-img");
+    const buySigninBtn = document.getElementById("buy-google-signin-btn");
+    const buyLogoutBtn = document.getElementById("buy-profile-logout");
+
+    if (!isLoggedIn) {
+      if (buyLoggedOut) buyLoggedOut.style.display = "flex";
+      if (buyLoggedIn) buyLoggedIn.style.display = "none";
+
+      if (buySigninBtn && !buySigninBtn.dataset.listened) {
+        buySigninBtn.dataset.listened = "true";
+        buySigninBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          showGoogleLogin();
+        });
       }
-    });
+    } else {
+      if (buyLoggedOut) buyLoggedOut.style.display = "none";
+      if (buyLoggedIn) buyLoggedIn.style.display = "flex";
+
+      if (buyName) buyName.textContent = storedName;
+      if (buyId) buyId.textContent = storedId;
+
+      if (buyAvatarImg && storedLogo) {
+        buyAvatarImg.onerror = null;
+        buyAvatarImg.onerror = () => {
+          buyAvatarImg.onerror = null;
+          const fallbackLogo = generateGoogleAvatar(storedName.charAt(0), "#1a73e8");
+          buyAvatarImg.src = fallbackLogo;
+        };
+        buyAvatarImg.src = storedLogo;
+      }
+
+      if (buyLogoutBtn && !buyLogoutBtn.dataset.listened) {
+        buyLogoutBtn.dataset.listened = "true";
+        buyLogoutBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          logoutGoogle();
+        });
+      }
+    }
   }
 }
 
 // Bind Google sign-in button listener
 document.addEventListener("DOMContentLoaded", () => {
-  const signInBtn = document.getElementById("google-signin-btn");
+  const signInBtn = document.getElementById("google-signin-btn") || document.getElementById("buy-google-signin-btn");
   if (signInBtn) {
     signInBtn.addEventListener("click", (e) => {
       e.preventDefault();
