@@ -5459,15 +5459,9 @@ html {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 40px;
-  padding: 8px 112px 8px 101px;
+  padding: 8px 21px 8px 10px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-}
-
-@media (max-width: 768px) {
-  .buy-logged-out-state {
-    padding: 8px 21px 8px 10px;
-  }
 }
 
 .buy-avatar-placeholder {
