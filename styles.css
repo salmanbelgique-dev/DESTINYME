@@ -3450,7 +3450,7 @@ html {
 .profile-name {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.15rem; /* Increased from 0.95rem */
   color: #ffffff;
   outline: none;
   border: none;
@@ -3463,7 +3463,7 @@ html {
 .profile-id {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  font-size: 0.72rem;
+  font-size: 0.85rem; /* Increased from 0.72rem */
   color: #a855f7; /* Nice Destiny purple accent */
   outline: none;
   border: none;
@@ -3530,10 +3530,10 @@ html {
     margin-right: 10px;
   }
   .profile-name {
-    font-size: 0.8rem;
+    font-size: 0.95rem; /* Increased from 0.8rem */
   }
   .profile-id {
-    font-size: 0.65rem;
+    font-size: 0.75rem; /* Increased from 0.65rem */
     margin-top: 1px;
   }
   .profile-avatar-container {
