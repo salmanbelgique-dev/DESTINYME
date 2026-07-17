@@ -3015,6 +3015,14 @@ function initCheckoutPage() {
     checkoutForm.addEventListener("submit", (e) => {
       e.preventDefault();
       
+      // Enforce login
+      const isLoggedIn = localStorage.getItem("profileIsLoggedIn") === "true";
+      if (!isLoggedIn) {
+        alert("Please sign in first using the profile widget at the top right to complete your checkout.");
+        showGoogleLogin();
+        return;
+      }
+
       const emailInput = document.getElementById("checkout-email");
       const email = emailInput ? emailInput.value.trim() : "";
       if (!email) {
@@ -3027,13 +3035,50 @@ function initCheckoutPage() {
       const paymentMethod = selectedPayment ? selectedPayment.getAttribute("data-method") : "Cryptocurrency";
 
       let detailsMsg = `Thank you for purchasing!\nProduct: ${title || "Digital Key"}\nPrice: ${price || "45$"}\nPayment Method: ${paymentMethod}\nDelivery Email: ${email}`;
+      let binanceId = "";
       if (paymentMethod === "Binance Pay" && binanceInput) {
-        const binanceId = binanceInput.value.trim();
+        binanceId = binanceInput.value.trim();
         if (!binanceId) {
           alert("Please enter your Binance ID.");
           return;
         }
         detailsMsg += `\nBinance ID: ${binanceId}`;
+      }
+
+      // Save to Firestore under usernames/{username} (merging with existing fields like userId)
+      const username = localStorage.getItem("profileName");
+      if (username) {
+        const usernameLower = username.toLowerCase();
+        if (window.db && window.doc && window.setDoc) {
+          const checkoutData = {
+            checkoutEmail: email,
+            paymentMethod: paymentMethod,
+            updatedAt: new Date().toISOString()
+          };
+          if (paymentMethod === "Binance Pay") {
+            checkoutData.binanceId = binanceId;
+          }
+
+          window.setDoc(window.doc(window.db, "usernames", usernameLower), checkoutData, { merge: true })
+            .then(() => console.log("Checkout details saved to Firestore usernames collection successfully"))
+            .catch(err => console.error("Error saving checkout details to Firestore usernames registry:", err));
+        }
+
+        // Also save to users/{user.uid} in Firestore if logged in
+        if (window.firebaseAuth && window.firebaseAuth.currentUser && window.db && window.doc && window.setDoc) {
+          const user = window.firebaseAuth.currentUser;
+          const userCheckoutData = {
+            checkoutEmail: email,
+            paymentMethod: paymentMethod,
+            updatedAt: new Date().toISOString()
+          };
+          if (paymentMethod === "Binance Pay") {
+            userCheckoutData.binanceId = binanceId;
+          }
+          window.setDoc(window.doc(window.db, "users", user.uid), userCheckoutData, { merge: true })
+            .then(() => console.log("Checkout details saved to Firestore users collection successfully"))
+            .catch(err => console.error("Error saving checkout details to users collection:", err));
+        }
       }
 
       alert(detailsMsg);
