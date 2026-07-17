@@ -2426,13 +2426,16 @@ function initProfileWidget() {
 
 // Bind Google sign-in button listener
 document.addEventListener("DOMContentLoaded", () => {
-  const signInBtn = document.getElementById("google-signin-btn") || document.getElementById("buy-google-signin-btn");
-  if (signInBtn) {
-    signInBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      showGoogleLogin();
-    });
-  }
+  const signInButtons = document.querySelectorAll("#google-signin-btn, #buy-google-signin-btn");
+  signInButtons.forEach(btn => {
+    if (!btn.dataset.listened) {
+      btn.dataset.listened = "true";
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        showGoogleLogin();
+      });
+    }
+  });
 
   // Handle Firebase redirect result (if returning from Google authentication)
   handleRedirectResult();
@@ -2921,6 +2924,12 @@ function initPurchaseButtons() {
   buyButtons.forEach(btn => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
+
+      const isLoggedIn = localStorage.getItem("profileIsLoggedIn") === "true";
+      if (!isLoggedIn) {
+        showGoogleLogin();
+        return;
+      }
       
       const card = e.target.closest(".buy-product-card");
       if (!card) return;
