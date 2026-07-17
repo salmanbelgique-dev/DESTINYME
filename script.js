@@ -3000,11 +3000,9 @@ function initCheckoutPage() {
     metaEl.innerHTML = badgesHTML;
   }
 
-  // If the product is the gold 96X version, activate the black theme overrides
+  // If the product is the gold 96X version, activate the gold theme overrides (but keep the background the same)
   if (title && title.includes("96X")) {
-    const buyPageSec = document.getElementById("buy-page");
     const mainGrid = document.querySelector(".checkout-main-grid");
-    if (buyPageSec) buyPageSec.classList.add("theme-black-bg");
     if (mainGrid) mainGrid.classList.add("theme-gold-borders");
   }
 
