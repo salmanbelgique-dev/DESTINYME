@@ -9,7 +9,7 @@ import { getDatabase, ref, set, get } from "firebase/database";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBOCEyQN4zcZyNTWhO9-mN1-sBxM3RSywI",
-  authDomain: "destinyrewards.store",
+  authDomain: "destiny-rewards-f3a5d.firebaseapp.com",
   projectId: "destiny-rewards-f3a5d",
   storageBucket: "destiny-rewards-f3a5d.firebasestorage.app",
   messagingSenderId: "650427918746",

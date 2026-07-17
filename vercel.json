@@ -5,11 +5,5 @@
       "src": "**",
       "use": "@vercel/static"
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/__/auth/:path*",
-      "destination": "https://destiny-rewards-f3a5d.firebaseapp.com/__/auth/:path*"
-    }
   ]
 }
