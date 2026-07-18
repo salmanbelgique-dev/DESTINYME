@@ -219,11 +219,45 @@
       <!-- Checkout Columns Grid -->
       <div class="checkout-main-grid">
         
-        <!-- Left Column: Payment Info & Timer -->
+        <!-- Left Column: Product Info & Customer Details -->
         <div class="checkout-details-panel">
+          <!-- Product Summary Preview (Extended big thumbnail stacked with title and price in center) -->
+          <div class="checkout-product-card-preview" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 24px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px;">
+            <div class="checkout-thumb-box" style="width: 280px; height: 280px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center;">
+              <img id="payment-prod-img" src="images/product_placeholder.png" alt="Product Thumbnail" class="checkout-preview-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="checkout-desc-box" style="display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%;">
+              <h2 id="payment-prod-title" class="checkout-product-title-text" style="color:#ffffff; font-family:'Bangers', cursive; font-size:2rem; letter-spacing:1px; margin: 0; line-height: 1.3;">Lucky Premium Game</h2>
+              <div class="checkout-price-preview" style="display: flex; justify-content: center; align-items: center; gap: 8px;">
+                <span class="checkout-price-label" style="color: rgba(255,255,255,0.6); font-weight: 600; font-size: 1.1rem;">Price:</span>
+                <span id="payment-prod-price" class="checkout-price-value" style="color: #3b82f6; font-weight: 800; font-size: 1.6rem;">250$</span>
+              </div>
+            </div>
+          </div>
           
+          <!-- Customer Details directly below price (no extra card wrapper) -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; margin-top: 10px;">
+            <div style="font-size: 1.1rem; color: rgba(255,255,255,0.7); display: flex; gap: 8px; justify-content: center; width: 100%;">
+              <span style="color: rgba(255,255,255,0.6); font-weight: 600;">Username:</span>
+              <span id="payment-username" style="color: #ffffff; font-weight: bold;">Guest</span>
+            </div>
+
+            <div style="font-size: 1.1rem; color: rgba(255,255,255,0.7); display: flex; gap: 8px; justify-content: center; width: 100%;">
+              <span style="color: rgba(255,255,255,0.6); font-weight: 600;">User ID:</span>
+              <span id="payment-userid" style="color: #a855f7; font-weight: bold;">-----</span>
+            </div>
+
+            <div style="font-size: 1.1rem; color: rgba(255,255,255,0.7); display: flex; gap: 8px; justify-content: center; width: 100%;">
+              <span style="color: rgba(255,255,255,0.6); font-weight: 600;">Delivery Email:</span>
+              <span id="payment-email" style="color: #ffffff; font-weight: bold;">you@example.com</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Column: Wallet address copy, QR Code & Timer -->
+        <div class="checkout-action-panel">
           <!-- Timer Section at the top -->
-          <div class="timer-flex-row">
+          <div class="timer-flex-row" style="margin-bottom: 24px; width: 100%; box-sizing: border-box;">
             <div class="timer-circle-box">
               <svg viewBox="0 0 36 36" class="circular-chart">
                 <path class="circle-bg"
@@ -245,43 +279,6 @@
             </div>
           </div>
 
-          <!-- Product Summary Preview -->
-          <div class="checkout-product-card-preview" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px;">
-            <div class="checkout-thumb-box">
-              <img id="payment-prod-img" src="images/product_placeholder.png" alt="Product Thumbnail" class="checkout-preview-thumbnail">
-            </div>
-            <div class="checkout-desc-box">
-              <h2 id="payment-prod-title" class="checkout-product-title-text" style="color:#ffffff; font-family:'Bangers', cursive; font-size:1.8rem; letter-spacing:1px;">Lucky Premium Game</h2>
-              <div class="checkout-price-preview" style="margin-top: 10px;">
-                <span class="checkout-price-label" style="color: rgba(255,255,255,0.6);">Amount to Send:</span>
-                <span id="payment-prod-price" class="checkout-price-value" style="color: #3b82f6; font-weight: 800; font-size: 1.5rem;">250$</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Customer Details -->
-          <div class="checkout-description-container" style="margin-top: 15px;">
-            <h3 class="checkout-sub-title" style="font-family:'Bangers', cursive; font-size:1.5rem; letter-spacing:1px; color:#ffffff; margin-bottom:15px;">Order Details</h3>
-            
-            <div class="checkout-desc-section" style="display:flex; justify-content:space-between; margin-bottom:10px;">
-              <span class="checkout-desc-label" style="color:rgba(255,255,255,0.6);">Username:</span>
-              <span id="payment-username" class="checkout-desc-value" style="color:#ffffff; font-weight:bold;">Guest</span>
-            </div>
-
-            <div class="checkout-desc-section" style="display:flex; justify-content:space-between; margin-bottom:10px;">
-              <span class="checkout-desc-label" style="color:rgba(255,255,255,0.6);">User ID:</span>
-              <span id="payment-userid" class="checkout-desc-value" style="color:#a855f7; font-weight:bold;">-----</span>
-            </div>
-
-            <div class="checkout-desc-section" style="display:flex; justify-content:space-between; margin-bottom:10px;">
-              <span class="checkout-desc-label" style="color:rgba(255,255,255,0.6);">Delivery Email:</span>
-              <span id="payment-email" class="checkout-desc-value" style="color:#ffffff; font-weight:bold;">you@example.com</span>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Right Column: Wallet address copy & QR Code -->
-        <div class="checkout-action-panel">
           <h3 class="checkout-sub-title" style="font-family:'Bangers', cursive; font-size:1.6rem; letter-spacing:1px; color:#ffffff; margin-bottom:20px; text-align:center;">Send Crypto Payment</h3>
           
           <!-- Address Display & Copy Button -->
