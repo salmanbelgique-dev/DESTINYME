@@ -332,6 +332,33 @@
               </div>
             </div>
 
+            <!-- Network Selector (Shown when Crypto Pay is active, hidden when Binance Pay is active) -->
+            <div class="checkout-input-group" id="network-select-container">
+              <label class="checkout-input-label">Select Network</label>
+              
+              <!-- Hidden input to hold the selected network for form submission -->
+              <input type="hidden" id="checkout-network-type" value="TRC20">
+              
+              <!-- Custom select box for Network -->
+              <div class="custom-select-wrapper" id="network-select-wrapper">
+                <div class="custom-select-trigger" id="network-select-trigger">
+                  <div class="selected-option-content" id="selected-network-content">
+                    <img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/trx.png" class="select-crypto-icon" alt="TRC20">
+                    <span class="select-crypto-name">TRC20</span>
+                  </div>
+                  <div class="custom-select-arrow">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                
+                <div class="custom-options-container" id="network-options-container">
+                  <!-- Options will be populated dynamically from JavaScript based on the selected cryptocurrency -->
+                </div>
+              </div>
+            </div>
+
             <!-- Binance ID Field (Hidden by default, shown when Binance Pay is active) -->
             <div class="checkout-input-group" id="binance-id-container" style="display: none;">
               <label for="checkout-binance-id" class="checkout-input-label">Binance ID (Pay ID)</label>

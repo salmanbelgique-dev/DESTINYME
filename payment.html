@@ -404,21 +404,44 @@
       if (imgEl && img) imgEl.setAttribute("src", img);
       if (priceEl) priceEl.textContent = price;
 
-      // Dynamic Cryptocurrency Details Loading
+      // Dynamic Cryptocurrency & Network Details Loading
       const selectedCrypto = localStorage.getItem("checkout_crypto") || "USDT";
+      const selectedNetwork = localStorage.getItem("checkout_network") || "TRC20";
       const walletLabelEl = document.getElementById("wallet-label");
       const walletAddressEl = document.getElementById("wallet-address");
       const qrCodeImgEl = document.getElementById("qr-code-img");
 
-      if (selectedCrypto === "USDC") {
-        if (walletLabelEl) walletLabelEl.textContent = "USDC (ERC-20) Wallet Address";
-        if (walletAddressEl) walletAddressEl.value = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
-        if (qrCodeImgEl) qrCodeImgEl.setAttribute("src", "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=0x71C7656EC7ab88b098defB751B7401B5f6d8976F");
-      } else {
-        // Default to USDT
-        if (walletLabelEl) walletLabelEl.textContent = "USDT (TRC-20) Wallet Address";
-        if (walletAddressEl) walletAddressEl.value = "TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9";
-        if (qrCodeImgEl) qrCodeImgEl.setAttribute("src", "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9");
+      let address = "TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9";
+      let label = "USDT (TRC-20) Wallet Address";
+
+      if (selectedCrypto === "USDT") {
+        if (selectedNetwork === "ERC20") {
+          address = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+          label = "USDT (ERC-20) Wallet Address";
+        } else if (selectedNetwork === "BEP20") {
+          address = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+          label = "USDT (BEP-20) Wallet Address";
+        } else {
+          address = "TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9";
+          label = "USDT (TRC-20) Wallet Address";
+        }
+      } else if (selectedCrypto === "USDC") {
+        if (selectedNetwork === "Solana") {
+          address = "4k3DYwMw48Ph7Sru25Bgh2CJC146wN8M5G";
+          label = "USDC (Solana) Wallet Address";
+        } else if (selectedNetwork === "Base") {
+          address = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+          label = "USDC (Base Network) Wallet Address";
+        } else {
+          address = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+          label = "USDC (ERC-20) Wallet Address";
+        }
+      }
+
+      if (walletLabelEl) walletLabelEl.textContent = label;
+      if (walletAddressEl) walletAddressEl.value = address;
+      if (qrCodeImgEl) {
+        qrCodeImgEl.setAttribute("src", `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${address}`);
       }
 
       // 3. Theme application for gold 96X versions (keep background blue)

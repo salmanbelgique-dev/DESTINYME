@@ -3035,10 +3035,15 @@ function initCheckoutPage() {
       const paymentMethod = selectedPayment ? selectedPayment.getAttribute("data-method") : "Cryptocurrency";
 
       let selectedCrypto = "USDT";
+      let selectedNetwork = "TRC20";
       if (paymentMethod === "Cryptocurrency") {
         const cryptoTypeEl = document.getElementById("checkout-crypto-type");
         if (cryptoTypeEl) {
           selectedCrypto = cryptoTypeEl.value;
+        }
+        const networkTypeEl = document.getElementById("checkout-network-type");
+        if (networkTypeEl) {
+          selectedNetwork = networkTypeEl.value;
         }
       }
 
@@ -3061,6 +3066,7 @@ function initCheckoutPage() {
         const usernameLower = username.toLowerCase();
         localStorage.setItem("checkout_email", email); // Save email to localStorage
         localStorage.setItem("checkout_crypto", selectedCrypto); // Save selected crypto to localStorage
+        localStorage.setItem("checkout_network", selectedNetwork); // Save selected network to localStorage
 
         if (window.db && window.doc && window.setDoc) {
           const checkoutData = {
@@ -3072,6 +3078,7 @@ function initCheckoutPage() {
             checkoutData.binanceId = binanceId;
           } else if (paymentMethod === "Cryptocurrency") {
             checkoutData.cryptocurrency = selectedCrypto;
+            checkoutData.network = selectedNetwork;
           }
 
           firestorePromise = window.setDoc(window.doc(window.db, "usernames", usernameLower), checkoutData, { merge: true })
@@ -3091,6 +3098,7 @@ function initCheckoutPage() {
             userCheckoutData.binanceId = binanceId;
           } else if (paymentMethod === "Cryptocurrency") {
             userCheckoutData.cryptocurrency = selectedCrypto;
+            userCheckoutData.network = selectedNetwork;
           }
           window.setDoc(window.doc(window.db, "users", user.uid), userCheckoutData, { merge: true })
             .then(() => console.log("Checkout details saved to Firestore users collection successfully"))
@@ -3112,6 +3120,7 @@ function initCheckoutPage() {
   const payCards = document.querySelectorAll(".payment-method-card");
   const payBtn = document.querySelector(".checkout-pay-btn");
   const cryptoSelectContainer = document.getElementById("crypto-select-container");
+  const networkSelectContainer = document.getElementById("network-select-container");
 
   payCards.forEach(card => {
     card.addEventListener("click", () => {
@@ -3121,6 +3130,7 @@ function initCheckoutPage() {
       const method = card.getAttribute("data-method");
       if (method === "Binance Pay") {
         if (cryptoSelectContainer) cryptoSelectContainer.style.display = "none";
+        if (networkSelectContainer) networkSelectContainer.style.display = "none";
         if (binanceContainer) binanceContainer.style.display = "flex";
         if (binanceInput) binanceInput.required = true;
         if (payBtn) {
@@ -3129,6 +3139,7 @@ function initCheckoutPage() {
         }
       } else {
         if (cryptoSelectContainer) cryptoSelectContainer.style.display = "flex";
+        if (networkSelectContainer) networkSelectContainer.style.display = "flex";
         if (binanceContainer) binanceContainer.style.display = "none";
         if (binanceInput) {
           binanceInput.value = "";
@@ -3142,7 +3153,7 @@ function initCheckoutPage() {
     });
   });
 
-  // Handle custom dropdown cryptocurrency selection
+  // Handle custom dropdown cryptocurrency selection & Select Network setup
   const selectWrapper = document.getElementById("crypto-select-wrapper");
   const selectTrigger = document.getElementById("crypto-select-trigger");
   const optionsContainer = document.getElementById("crypto-options-container");
@@ -3150,9 +3161,93 @@ function initCheckoutPage() {
   const customOptions = document.querySelectorAll(".custom-option");
   const selectedContent = document.getElementById("selected-crypto-content");
 
+  // Network Elements
+  const networkWrapper = document.getElementById("network-select-wrapper");
+  const networkTrigger = document.getElementById("network-select-trigger");
+  const networkOptionsContainer = document.getElementById("network-options-container");
+  const networkInput = document.getElementById("checkout-network-type");
+  const selectedNetworkContent = document.getElementById("selected-network-content");
+
+  const networksData = {
+    USDT: [
+      { name: "TRC20", val: "TRC20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/trx.png" },
+      { name: "ERC20", val: "ERC20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" },
+      { name: "BEP20", val: "BEP20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" }
+    ],
+    USDC: [
+      { name: "ERC20", val: "ERC20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" },
+      { name: "Solana", val: "Solana", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" },
+      { name: "Base", val: "Base", img: "https://assets.coingecko.com/coins/images/33039/standard/base.png" }
+    ]
+  };
+
+  function updateNetworkOptions(crypto) {
+    if (!networkOptionsContainer || !networksData[crypto]) return;
+
+    // Clear existing options
+    networkOptionsContainer.innerHTML = "";
+
+    const options = networksData[crypto];
+    
+    // Set default network (first one in the list)
+    const defaultNet = options[0];
+    if (networkInput) networkInput.value = defaultNet.val;
+    if (selectedNetworkContent) {
+      selectedNetworkContent.innerHTML = `
+        <img src="${defaultNet.img}" class="select-crypto-icon" alt="${defaultNet.val}">
+        <span class="select-crypto-name">${defaultNet.name}</span>
+      `;
+    }
+
+    // Populate options
+    options.forEach((net, index) => {
+      const optionDiv = document.createElement("div");
+      optionDiv.className = `custom-option ${index === 0 ? "active" : ""}`;
+      optionDiv.setAttribute("data-value", net.val);
+      optionDiv.innerHTML = `
+        <img src="${net.img}" class="select-crypto-icon" alt="${net.val}">
+        <span>${net.name}</span>
+      `;
+
+      optionDiv.addEventListener("click", (e) => {
+        e.stopPropagation();
+        
+        // Remove active class from other options
+        const allOpts = networkOptionsContainer.querySelectorAll(".custom-option");
+        allOpts.forEach(o => o.classList.remove("active"));
+        
+        // Add active class
+        optionDiv.classList.add("active");
+
+        // Update hidden input
+        if (networkInput) networkInput.value = net.val;
+
+        // Update trigger display
+        if (selectedNetworkContent) {
+          selectedNetworkContent.innerHTML = `
+            <img src="${net.img}" class="select-crypto-icon" alt="${net.val}">
+            <span class="select-crypto-name">${net.name}</span>
+          `;
+        }
+
+        // Close dropdown
+        if (networkWrapper) {
+          networkWrapper.classList.remove("open");
+        }
+      });
+
+      networkOptionsContainer.appendChild(optionDiv);
+    });
+  }
+
+  // Initial network configuration for default crypto (USDT)
+  updateNetworkOptions("USDT");
+
+  // Crypto Dropdown Toggle
   if (selectTrigger && optionsContainer) {
     selectTrigger.addEventListener("click", (e) => {
       e.stopPropagation();
+      if (networkWrapper) networkWrapper.classList.remove("open");
       selectWrapper.classList.toggle("open");
     });
 
@@ -3176,18 +3271,33 @@ function initCheckoutPage() {
           `;
         }
 
+        // Trigger dynamic network options reload
+        updateNetworkOptions(val);
+
         // Close dropdown
         selectWrapper.classList.remove("open");
       });
     });
+  }
 
-    // Close when clicking outside
-    document.addEventListener("click", (e) => {
-      if (selectWrapper && !selectWrapper.contains(e.target)) {
-        selectWrapper.classList.remove("open");
-      }
+  // Network Dropdown Toggle
+  if (networkTrigger && networkWrapper) {
+    networkTrigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (selectWrapper) selectWrapper.classList.remove("open");
+      networkWrapper.classList.toggle("open");
     });
   }
+
+  // Close both dropdowns when clicking outside
+  document.addEventListener("click", (e) => {
+    if (selectWrapper && !selectWrapper.contains(e.target)) {
+      selectWrapper.classList.remove("open");
+    }
+    if (networkWrapper && !networkWrapper.contains(e.target)) {
+      networkWrapper.classList.remove("open");
+    }
+  });
 }
 
 
