@@ -3177,7 +3177,7 @@ function initCheckoutPage() {
     USDC: [
       { name: "SOL", val: "SOL", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" },
       { name: "BEP20", val: "BEP20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" },
-      { name: "SUI", val: "SUI", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sui.png" }
+      { name: "SUI", val: "SUI", img: "https://www.dropbox.com/scl/fi/jdrg8yh9kyxuzgqohfygp/sui-7591eb35.png?rlkey=8wh36murd5na929r4rth3op4j&st=5zp8v8ek&dl=1" }
     ]
   };
 
