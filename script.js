@@ -3171,7 +3171,7 @@ function initCheckoutPage() {
   const networksData = {
     USDT: [
       { name: "TRC20", val: "TRC20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/trx.png" },
-      { name: "APT", val: "APT", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/apt.png" },
+      { name: "APT", val: "APT", img: "https://www.dropbox.com/scl/fi/cx35j53s6m5wm32s9inre/Design-sans-titre-28.png?rlkey=g331aqm9l4t1z6w6478je0pd8&st=lk58xs63&dl=1" },
       { name: "BEP20", val: "BEP20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" }
     ],
     USDC: [
