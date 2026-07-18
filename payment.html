@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destiny Rewards - Crypto Payment</title>
+  <meta name="description" content="Destiny Rewards Crypto Payment Page">
+  <!-- Google Fonts: Montserrat Heavy Italic & Bangers -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=League+Spartan:wght@700;800;900&family=Montserrat:ital,wght@1,900&display=swap"
+    rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css?v=113">
+  <style>
+    /* Critical layout properties for immediate rendering on load */
+    :root {
+      --logo-size: 96px;
+      --logo-target-left: 24px;
+      --logo-target-top: 16px;
+      --logo-expanded-width: 270px;
+      --logo-text-width: 160px;
+    }
+    @media (max-width: 768px) {
+      :root {
+        --logo-size: 72px;
+        --logo-target-left: 16px;
+        --logo-target-top: 12px;
+        --logo-expanded-width: 210px;
+        --logo-text-width: 120px;
+      }
+    }
+    .brand-logo-glass-container {
+      position: fixed !important;
+      top: var(--logo-target-top) !important;
+      left: var(--logo-target-left) !important;
+      width: var(--logo-expanded-width) !important;
+      height: var(--logo-size) !important;
+      transform: translate(0, 0) scale(0.85) !important;
+      animation: none !important;
+    }
+    .brand-logo-text {
+      animation: none !important;
+      opacity: 1 !important;
+      width: var(--logo-text-width) !important;
+      transform: translateX(0) !important;
+    }
+    #sticky-nav {
+      position: fixed !important;
+      top: calc(var(--logo-target-top) + (var(--logo-size) - 54px) / 2) !important;
+      right: var(--logo-target-left) !important;
+      transform: translateX(0) scale(0.85) !important;
+      opacity: 1 !important;
+      transition: none !important;
+    }
+    @media (max-width: 768px) {
+      #sticky-nav {
+        top: calc(var(--logo-target-top) + (var(--logo-size) - 38px) / 2) !important;
+      }
+    }
+
+    /* Circular progress timer CSS */
+    .timer-flex-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .timer-circle-box {
+      width: 54px;
+      height: 54px;
+      position: relative;
+    }
+    .circular-chart {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .circle-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.04);
+      stroke-width: 3.5;
+    }
+    .circle {
+      fill: none;
+      stroke: #3b82f6;
+      stroke-width: 3.5;
+      stroke-linecap: round;
+      transition: stroke-dasharray 1s linear, stroke 0.3s ease;
+    }
+    .timer-text-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+    .timer-label {
+      font-family: 'League Spartan', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .timer-number {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #3b82f6;
+      letter-spacing: 0.5px;
+      line-height: 1;
+      transition: color 0.3s ease;
+    }
+  </style>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Import Map for Firebase Modules -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+        "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"
+      }
+    }
+  </script>
+  <!-- Firebase Initialization -->
+  <script src="firebase.js?v=105" type="module"></script>
+  <!-- JavaScript -->
+  <script src="script.js?v=105" defer></script>
+</head>
+
+<body class="buy-page-body">
+
+  <!-- Animated Glass Liquid Logo Container (Settle State) -->
+  <div class="brand-logo-glass-container" onclick="window.location.href='index.html';" style="animation: none; transform: translate(0, 0) scale(0.85); top: var(--logo-target-top); left: var(--logo-target-left); cursor: pointer;">
+    <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="brand-logo-img">
+    <div class="brand-logo-text">
+      <div class="text-destiny">DESTINY</div>
+      <div class="text-rewards">REWARDS</div>
+    </div>
+  </div>
+
+  <!-- Sticky Horizontal Navigation Bar -->
+  <nav id="sticky-nav" class="visible">
+    <div class="nav-sliding-bubble" id="nav-sliding-bubble"></div>
+    <ul class="sticky-nav-links">
+      <li>
+        <a href="index.html" class="sticky-nav-link">
+          <svg class="nav-home-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2.09c-.55 0-1.05.28-1.38.73L2.38 11.06c-.5.5-.14 1.36.57 1.36H5v6.5c0 1.1.9 2 2 2h3v-5c0-1.1.9-2 2-2s2 .9 2 2v5h3c1.1 0 2-.9 2-2v-6.5h2.05c.71 0 1.07-.86.57-1.36L13.38 2.82C13.05 2.37 12.55 2.09 12 2.09z" />
+          </svg>
+          HOME
+        </a>
+      </li>
+      <li>
+        <a href="buy.html" class="sticky-nav-link" id="nav-buy-link">
+          <img src="images/buy_icon_white_dollar.png" alt="Buy" class="nav-buy-icon">
+          BUY
+        </a>
+      </li>
+      <li>
+        <a href="challenge.html" class="sticky-nav-link" id="nav-challenge-link">
+          <svg class="nav-spin-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="48" r="40" fill="#6B8AFF" />
+            <path d="M50 8 L50 48 L82 20Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M90 48 L50 48 L78 76Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M50 88 L50 48 L22 76Z" fill="rgba(255,255,255,0.92)" />
+            <path d="M10 48 L50 48 L18 20Z" fill="rgba(255,255,255,0.92)" />
+            <circle cx="50" cy="48" r="6" fill="#6B8AFF" stroke="rgba(255,255,255,0.92)" stroke-width="3" />
+            <circle cx="12" cy="40" r="5" fill="rgba(255,255,255,0.92)" />
+            <rect x="44" y="86" width="12" height="14" rx="2" fill="#6B8AFF" />
+            <path d="M32 100 Q50 95 68 100 L68 108 Q50 103 32 108Z" fill="#6B8AFF" />
+          </svg>
+          CHALLENGE
+        </a>
+      </li>
+      <li>
+        <a href="index.html#second-layer" class="sticky-nav-link" id="nav-bid-link">
+          <img src="images/lock_cropped.png" alt="Lock" class="nav-lock-icon">
+          BID
+        </a>
+      </li>
+      <li>
+        <a href="index.html#second-layer" class="sticky-nav-link" id="nav-free-link">
+          <img src="images/lock_cropped.png" alt="Lock" class="nav-lock-icon">
+          FOR FREE
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Checkout Section (Dark layout matching Buy section) -->
+  <section class="second-layer-section" id="buy-page">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+
+    <div class="buy-content-wrapper">
+      <!-- Checkout Header -->
+      <div class="buy-header-panel">
+        <div class="buy-title-group">
+          <h1 class="buy-title">CRYPTO PAYMENT</h1>
+          <span class="buy-subtitle">SECURE BLOCKCHAIN TRANSACTION</span>
+        </div>
+      </div>
+
+      <!-- Checkout Columns Grid -->
+      <div class="checkout-main-grid">
+        
+        <!-- Left Column: Payment Info & Timer -->
+        <div class="checkout-details-panel">
+          
+          <!-- Timer Section at the top -->
+          <div class="timer-flex-row">
+            <div class="timer-circle-box">
+              <svg viewBox="0 0 36 36" class="circular-chart">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path id="circle-progress" class="circle"
+                  stroke-dasharray="100, 100"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+              </svg>
+            </div>
+            <div class="timer-text-box">
+              <span class="timer-label">PAYMENT WINDOW CLOSES IN</span>
+              <span id="countdown-text" class="timer-number">30:00</span>
+            </div>
+          </div>
+
+          <!-- Product Summary Preview -->
+          <div class="checkout-product-card-preview" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px;">
+            <div class="checkout-thumb-box">
+              <img id="payment-prod-img" src="images/product_placeholder.png" alt="Product Thumbnail" class="checkout-preview-thumbnail">
+            </div>
+            <div class="checkout-desc-box">
+              <h2 id="payment-prod-title" class="checkout-product-title-text" style="color:#ffffff; font-family:'Bangers', cursive; font-size:1.8rem; letter-spacing:1px;">Lucky Premium Game</h2>
+              <div class="checkout-price-preview" style="margin-top: 10px;">
+                <span class="checkout-price-label" style="color: rgba(255,255,255,0.6);">Amount to Send:</span>
+                <span id="payment-prod-price" class="checkout-price-value" style="color: #3b82f6; font-weight: 800; font-size: 1.5rem;">250$</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Customer Details -->
+          <div class="checkout-description-container" style="margin-top: 15px;">
+            <h3 class="checkout-sub-title" style="font-family:'Bangers', cursive; font-size:1.5rem; letter-spacing:1px; color:#ffffff; margin-bottom:15px;">Order Details</h3>
+            
+            <div class="checkout-desc-section" style="display:flex; justify-content:space-between; margin-bottom:10px;">
+              <span class="checkout-desc-label" style="color:rgba(255,255,255,0.6);">Username:</span>
+              <span id="payment-username" class="checkout-desc-value" style="color:#ffffff; font-weight:bold;">Guest</span>
+            </div>
+
+            <div class="checkout-desc-section" style="display:flex; justify-content:space-between; margin-bottom:10px;">
+              <span class="checkout-desc-label" style="color:rgba(255,255,255,0.6);">User ID:</span>
+              <span id="payment-userid" class="checkout-desc-value" style="color:#a855f7; font-weight:bold;">-----</span>
+            </div>
+
+            <div class="checkout-desc-section" style="display:flex; justify-content:space-between; margin-bottom:10px;">
+              <span class="checkout-desc-label" style="color:rgba(255,255,255,0.6);">Delivery Email:</span>
+              <span id="payment-email" class="checkout-desc-value" style="color:#ffffff; font-weight:bold;">you@example.com</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Column: Wallet address copy & QR Code -->
+        <div class="checkout-action-panel">
+          <h3 class="checkout-sub-title" style="font-family:'Bangers', cursive; font-size:1.6rem; letter-spacing:1px; color:#ffffff; margin-bottom:20px; text-align:center;">Send Crypto Payment</h3>
+          
+          <!-- Address Display & Copy Button -->
+          <div class="checkout-input-group" style="margin-bottom: 24px;">
+            <label class="checkout-input-label" style="color:rgba(255,255,255,0.8); font-weight:bold; margin-bottom:8px; display:block;">USDT (TRC-20) Wallet Address</label>
+            <div style="display:flex; gap:10px;">
+              <input type="text" id="wallet-address" class="checkout-text-input" value="TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9" readonly style="flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); color:#ffffff; font-family:monospace; font-size:0.95rem; text-align:center; border-radius:12px; padding:12px;">
+              <button onclick="copyWalletAddress()" id="copy-btn" class="checkout-pay-btn" style="width:auto; padding:0 20px; border-radius:12px; font-weight:bold; cursor:pointer; background:#3b82f6; border:none; color:#ffffff; font-family:'Montserrat',sans-serif;">COPY</button>
+            </div>
+          </div>
+
+          <!-- QR Code Container -->
+          <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-bottom:24px;">
+            <div style="width:160px; height:160px; background:#ffffff; padding:10px; border-radius:16px; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
+              <img id="qr-code-img" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9" alt="Payment QR Code" style="width:100%; height:100%; object-fit:contain;">
+            </div>
+            <span style="font-size:0.8rem; color:rgba(255,255,255,0.5); font-style:italic;">Scan this QR code with your Crypto wallet app</span>
+          </div>
+
+          <!-- Instructions & Confirmation Button -->
+          <div class="checkout-policy-alert" style="margin-bottom: 24px; padding: 12px 16px; border-radius:12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); display:flex; gap:12px; align-items:center;">
+            <i data-lucide="alert-triangle" style="color:#ef4444; flex-shrink:0; width:20px; height:20px;"></i>
+            <span style="font-size:0.85rem; color:rgba(255,255,255,0.8); line-height:1.4;">Please send exactly the payment amount. Once sent, click 'I HAVE PAID' to send the transaction details/receipt to our support bot.</span>
+          </div>
+
+          <button onclick="confirmCryptoPayment()" class="checkout-pay-btn btn-whatsapp-green" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:16px 20px; border-radius:16px; font-weight:bold; font-size:1.1rem; cursor:pointer; background:#25d366; border:none; color:#ffffff; transition:all 0.3s ease;">
+            <img src="https://www.dropbox.com/scl/fi/1z4c3wqn8an7shaeku47w/telegram-white-icon.webp?rlkey=m91wtlv8kn9u0yotbncq1mrhn&st=eqd5g0tj&dl=1" class="checkout-btn-icon" alt="Telegram">
+            I HAVE PAID
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG Curve/Divider before footer (same as buy/checkout pages) -->
+    <div class="blue-layer-curve-container" style="position:relative; margin-top:100px; width:100%;">
+      <svg viewBox="0 0 1440 120" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%; height:40px; margin-bottom:-1px;">
+        <path d="M0,120 L0,0 C90,40 180,60 280,60 C380,60 460,20 540,40 C620,60 700,80 800,80 C900,80 980,40 1060,50 C1140,60 1240,90 1340,70 C1390,60 1420,30 1440,0 L1440,120 Z" fill="#000000"></path>
+      </svg>
+    </div>
+
+    <!-- Footer Content Wrapper (Last Layer) -->
+    <div class="buy-footer-body-wrapper">
+      <div class="blue-layer-content">
+        <div class="blue-layer-left">
+          <div class="blue-layer-logo-row">
+            <div class="blue-layer-logo-glass">
+              <img src="images/brand-logo.png?v=1" alt="Brand Logo" class="blue-layer-logo-img">
+              <div class="blue-layer-logo-text">
+                <span class="blue-layer-text-destiny">DESTINY</span>
+                <span class="blue-layer-text-rewards">REWARDS</span>
+              </div>
+            </div>
+            <div class="blue-layer-socials">
+              <a href="https://t.me/Destinyrewards_bot" target="_blank" class="blue-layer-social-link" title="Telegram">
+                <img src="https://www.dropbox.com/scl/fi/0c7uekuupio6rckmdf72u/telegram-white-icon.webp?rlkey=gwg7wb0xie3cr5kab7jdatjw4&st=m3d5ml2y&dl=1" alt="Telegram">
+              </a>
+              <a href="#" class="blue-layer-social-link" title="Instagram">
+                <img src="https://www.dropbox.com/scl/fi/vqayt584oli4i16ela37h/instagram-white-icon.webp?rlkey=kmlvg9oy78dyfy115shmtsr7e&st=0z54w1rb&dl=1" alt="Instagram">
+              </a>
+              <a href="#" class="blue-layer-social-link" title="Facebook">
+                <img src="https://www.dropbox.com/scl/fi/pay7c8vo5xnt0syfwpowv/facebook-app-round-white-icon.webp?rlkey=svhxzcrct0hc3o8ta98lpeieq&st=a6orxjrm&dl=1" alt="Facebook">
+              </a>
+            </div>
+          </div>
+          <p class="blue-layer-description">
+            DestinyRewards is a digital marketplace for gaming products, offering great deals, exclusive rewards, and affordable prices. We're happy to have you as part of our community!
+          </p>
+        </div>
+
+        <div class="blue-layer-right">
+          <div class="blue-layer-nav-card">
+            <div class="blue-layer-nav-grid">
+              <a href="index.html" class="blue-layer-nav-link">HOME</a>
+              <a href="mailto:support@destinyrewards.com" class="blue-layer-nav-link">EMAIL US</a>
+              <a href="challenge.html" class="blue-layer-nav-link">CHALLENGE</a>
+              <a href="buy.html" class="blue-layer-nav-link">BUY</a>
+              <a href="index.html#second-layer" class="blue-layer-nav-link">BID</a>
+              <a href="index.html#second-layer" class="blue-layer-nav-link">FOR FREE</a>
+            </div>
+          </div>
+          <div class="blue-layer-rights">
+            Ⓒ 2026 DESTINY REWARDS. All Rights Reserved
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Backdrop Overlay -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+
+  <!-- Page Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Render Lucide Icons
+      if (typeof lucide !== "undefined") {
+        lucide.createIcons();
+      }
+
+      // 2. Load Details from localStorage
+      const username = localStorage.getItem("profileName") || "Guest";
+      const userId = localStorage.getItem("profileId") || "ID: -----";
+      const email = localStorage.getItem("checkout_email") || "you@example.com";
+      const title = localStorage.getItem("checkout_title") || "Digital Key";
+      const img = localStorage.getItem("checkout_img") || "images/product_placeholder.png";
+      const price = localStorage.getItem("checkout_price") || "45$";
+
+      // Set HTML Elements
+      const usernameEl = document.getElementById("payment-username");
+      const userIdEl = document.getElementById("payment-userid");
+      const emailEl = document.getElementById("payment-email");
+      const titleEl = document.getElementById("payment-prod-title");
+      const imgEl = document.getElementById("payment-prod-img");
+      const priceEl = document.getElementById("payment-prod-price");
+
+      if (usernameEl) usernameEl.textContent = username;
+      if (userIdEl) userIdEl.textContent = userId;
+      if (emailEl) emailEl.textContent = email;
+      if (titleEl) titleEl.textContent = title;
+      if (imgEl && img) imgEl.setAttribute("src", img);
+      if (priceEl) priceEl.textContent = price;
+
+      // 3. Theme application for gold 96X versions
+      if (title && title.includes("96X")) {
+        const buyPageSec = document.getElementById("buy-page");
+        const mainGrid = document.querySelector(".checkout-main-grid");
+        if (buyPageSec) buyPageSec.classList.add("theme-black-bg");
+        if (mainGrid) mainGrid.classList.add("theme-gold-borders");
+      }
+
+      // 4. Timer Logic: 30 minutes (1800 seconds) countdown
+      let timeLeft = 1800;
+
+      function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        
+        const minStr = minutes < 10 ? '0' + minutes : minutes;
+        const secStr = seconds < 10 ? '0' + seconds : seconds;
+        
+        const textEl = document.getElementById("countdown-text");
+        if (textEl) {
+          textEl.textContent = `${minStr}:${secStr}`;
+        }
+        
+        // Update SVG circle path stroke-dasharray (based on 1800 total seconds)
+        const circleEl = document.getElementById("circle-progress");
+        if (circleEl) {
+          const percentage = (timeLeft / 1800) * 100;
+          circleEl.setAttribute("stroke-dasharray", `${percentage}, 100`);
+          
+          // Color progression based on remaining time
+          if (percentage < 10) {
+            circleEl.style.stroke = "#ef4444"; // Red (Critical)
+            if (textEl) textEl.style.color = "#ef4444";
+          } else if (percentage < 25) {
+            circleEl.style.stroke = "#f59e0b"; // Orange (Warning)
+            if (textEl) textEl.style.color = "#f59e0b";
+          } else {
+            circleEl.style.stroke = "#3b82f6"; // Blue (Good)
+            if (textEl) textEl.style.color = "#3b82f6";
+          }
+        }
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          if (textEl) textEl.textContent = "EXPIRED";
+          alert("Your payment window has expired. Please try again.");
+          window.location.href = "checkout.html";
+        } else {
+          timeLeft--;
+        }
+      }
+
+      const timerInterval = setInterval(updateTimer, 1000);
+      updateTimer(); // run once immediately
+    });
+
+    // 5. Copy Address Helper
+    function copyWalletAddress() {
+      const walletInput = document.getElementById("wallet-address");
+      const copyBtn = document.getElementById("copy-btn");
+      if (walletInput && copyBtn) {
+        navigator.clipboard.writeText(walletInput.value.trim())
+          .then(() => {
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = "COPIED!";
+            copyBtn.style.background = "#25d366"; // Turn green
+            setTimeout(() => {
+              copyBtn.textContent = originalText;
+              copyBtn.style.background = "#3b82f6"; // Revert to blue
+            }, 2000);
+          })
+          .catch(err => {
+            console.error("Failed to copy wallet address: ", err);
+          });
+      }
+    }
+
+    // 6. Confirm Payment Redirect
+    function confirmCryptoPayment() {
+      window.open("https://t.me/Destinyrewards_bot", "_blank");
+    }
+  </script>
+</body>
+
+</html>

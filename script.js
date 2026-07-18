@@ -3047,8 +3047,12 @@ function initCheckoutPage() {
 
       // Save to Firestore under usernames/{username} (merging with existing fields like userId)
       const username = localStorage.getItem("profileName");
+      let firestorePromise = Promise.resolve();
+
       if (username) {
         const usernameLower = username.toLowerCase();
+        localStorage.setItem("checkout_email", email); // Save email to localStorage
+
         if (window.db && window.doc && window.setDoc) {
           const checkoutData = {
             checkoutEmail: email,
@@ -3059,7 +3063,7 @@ function initCheckoutPage() {
             checkoutData.binanceId = binanceId;
           }
 
-          window.setDoc(window.doc(window.db, "usernames", usernameLower), checkoutData, { merge: true })
+          firestorePromise = window.setDoc(window.doc(window.db, "usernames", usernameLower), checkoutData, { merge: true })
             .then(() => console.log("Checkout details saved to Firestore usernames collection successfully"))
             .catch(err => console.error("Error saving checkout details to Firestore usernames registry:", err));
         }
@@ -3081,7 +3085,13 @@ function initCheckoutPage() {
         }
       }
 
-      alert(detailsMsg);
+      if (paymentMethod === "Cryptocurrency") {
+        firestorePromise.then(() => {
+          window.location.href = "payment.html";
+        });
+      } else {
+        alert(detailsMsg);
+      }
     });
   }
 
