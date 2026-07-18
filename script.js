@@ -3142,19 +3142,53 @@ function initCheckoutPage() {
     });
   });
 
-  // Handle cryptocurrency cards selection
-  const cryptoCards = document.querySelectorAll(".crypto-method-card");
+  // Handle custom dropdown cryptocurrency selection
+  const selectWrapper = document.getElementById("crypto-select-wrapper");
+  const selectTrigger = document.getElementById("crypto-select-trigger");
+  const optionsContainer = document.getElementById("crypto-options-container");
   const cryptoInput = document.getElementById("checkout-crypto-type");
+  const customOptions = document.querySelectorAll(".custom-option");
+  const selectedContent = document.getElementById("selected-crypto-content");
 
-  if (cryptoCards && cryptoInput) {
-    cryptoCards.forEach(card => {
-      card.addEventListener("click", () => {
-        cryptoCards.forEach(c => c.classList.remove("active"));
-        card.classList.add("active");
-        
-        const selectedCrypto = card.getAttribute("data-crypto") || "USDT";
-        cryptoInput.value = selectedCrypto;
+  if (selectTrigger && optionsContainer) {
+    selectTrigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = selectWrapper.classList.toggle("open");
+      optionsContainer.style.display = isOpen ? "flex" : "none";
+    });
+
+    customOptions.forEach(option => {
+      option.addEventListener("click", (e) => {
+        e.stopPropagation();
+        customOptions.forEach(opt => opt.classList.remove("active"));
+        option.classList.add("active");
+
+        const val = option.getAttribute("data-value");
+        const img = option.querySelector("img").getAttribute("src");
+
+        // Update hidden input
+        if (cryptoInput) cryptoInput.value = val;
+
+        // Update selected display
+        if (selectedContent) {
+          selectedContent.innerHTML = `
+            <img src="${img}" class="select-crypto-icon" alt="${val}">
+            <span class="select-crypto-name">${val}</span>
+          `;
+        }
+
+        // Close dropdown
+        selectWrapper.classList.remove("open");
+        optionsContainer.style.display = "none";
       });
+    });
+
+    // Close when clicking outside
+    document.addEventListener("click", (e) => {
+      if (selectWrapper && !selectWrapper.contains(e.target)) {
+        selectWrapper.classList.remove("open");
+        optionsContainer.style.display = "none";
+      }
     });
   }
 }

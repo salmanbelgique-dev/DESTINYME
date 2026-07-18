@@ -305,23 +305,29 @@
               <!-- Hidden input to hold the selected cryptocurrency for form submission -->
               <input type="hidden" id="checkout-crypto-type" value="USDT">
               
-              <div class="crypto-selector-grid">
-                <!-- USDT card -->
-                <div class="crypto-method-card active" data-crypto="USDT">
-                  <div class="crypto-method-icon-row">
-                    <img src="https://www.dropbox.com/scl/fi/lda0gtitqmw4se6z2qbmw/0xdac17f958d2ee523a2206206994597c13d831ec7.png?rlkey=73u4e78hzm17uli1hbc11xz88&st=kfhfmdo7&dl=1" class="crypto-icon" alt="USDT">
+              <!-- Custom select box -->
+              <div class="custom-select-wrapper" id="crypto-select-wrapper">
+                <div class="custom-select-trigger" id="crypto-select-trigger">
+                  <div class="selected-option-content" id="selected-crypto-content">
+                    <img src="https://www.dropbox.com/scl/fi/lda0gtitqmw4se6z2qbmw/0xdac17f958d2ee523a2206206994597c13d831ec7.png?rlkey=73u4e78hzm17uli1hbc11xz88&st=kfhfmdo7&dl=1" class="select-crypto-icon" alt="USDT">
+                    <span class="select-crypto-name">USDT</span>
                   </div>
-                  <span class="crypto-method-name">USDT</span>
-                  <span class="crypto-method-sub">Tether (TRC-20)</span>
+                  <div class="custom-select-arrow">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
                 </div>
-
-                <!-- USDC card -->
-                <div class="crypto-method-card" data-crypto="USDC">
-                  <div class="crypto-method-icon-row">
-                    <img src="https://www.dropbox.com/scl/fi/9ji8piq89ph4rz8y2lyvr/ed56241a5ef84c4682170faeff21f43f-removebg-preview.png?rlkey=xf5utex7c49sm5av6twqy1aoe&st=613pdd4w&dl=1" class="crypto-icon" alt="USDC">
+                
+                <div class="custom-options-container" id="crypto-options-container" style="display: none;">
+                  <div class="custom-option active" data-value="USDT">
+                    <img src="https://www.dropbox.com/scl/fi/lda0gtitqmw4se6z2qbmw/0xdac17f958d2ee523a2206206994597c13d831ec7.png?rlkey=73u4e78hzm17uli1hbc11xz88&st=kfhfmdo7&dl=1" class="select-crypto-icon" alt="USDT">
+                    <span>USDT</span>
                   </div>
-                  <span class="crypto-method-name">USDC</span>
-                  <span class="crypto-method-sub">USD Coin (ERC-20)</span>
+                  <div class="custom-option" data-value="USDC">
+                    <img src="https://www.dropbox.com/scl/fi/9ji8piq89ph4rz8y2lyvr/ed56241a5ef84c4682170faeff21f43f-removebg-preview.png?rlkey=xf5utex7c49sm5av6twqy1aoe&st=613pdd4w&dl=1" class="select-crypto-icon" alt="USDC">
+                    <span>USDC</span>
+                  </div>
                 </div>
               </div>
             </div>
