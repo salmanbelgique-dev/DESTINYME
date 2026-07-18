@@ -3034,6 +3034,14 @@ function initCheckoutPage() {
       const selectedPayment = document.querySelector(".payment-method-card.active");
       const paymentMethod = selectedPayment ? selectedPayment.getAttribute("data-method") : "Cryptocurrency";
 
+      let selectedCrypto = "USDT";
+      if (paymentMethod === "Cryptocurrency") {
+        const cryptoTypeEl = document.getElementById("checkout-crypto-type");
+        if (cryptoTypeEl) {
+          selectedCrypto = cryptoTypeEl.value;
+        }
+      }
+
       let detailsMsg = `Thank you for purchasing!\nProduct: ${title || "Digital Key"}\nPrice: ${price || "45$"}\nPayment Method: ${paymentMethod}\nDelivery Email: ${email}`;
       let binanceId = "";
       if (paymentMethod === "Binance Pay" && binanceInput) {
@@ -3052,6 +3060,7 @@ function initCheckoutPage() {
       if (username) {
         const usernameLower = username.toLowerCase();
         localStorage.setItem("checkout_email", email); // Save email to localStorage
+        localStorage.setItem("checkout_crypto", selectedCrypto); // Save selected crypto to localStorage
 
         if (window.db && window.doc && window.setDoc) {
           const checkoutData = {
@@ -3061,6 +3070,8 @@ function initCheckoutPage() {
           };
           if (paymentMethod === "Binance Pay") {
             checkoutData.binanceId = binanceId;
+          } else if (paymentMethod === "Cryptocurrency") {
+            checkoutData.cryptocurrency = selectedCrypto;
           }
 
           firestorePromise = window.setDoc(window.doc(window.db, "usernames", usernameLower), checkoutData, { merge: true })
@@ -3078,6 +3089,8 @@ function initCheckoutPage() {
           };
           if (paymentMethod === "Binance Pay") {
             userCheckoutData.binanceId = binanceId;
+          } else if (paymentMethod === "Cryptocurrency") {
+            userCheckoutData.cryptocurrency = selectedCrypto;
           }
           window.setDoc(window.doc(window.db, "users", user.uid), userCheckoutData, { merge: true })
             .then(() => console.log("Checkout details saved to Firestore users collection successfully"))
@@ -3098,6 +3111,7 @@ function initCheckoutPage() {
   // Handle payment cards selection
   const payCards = document.querySelectorAll(".payment-method-card");
   const payBtn = document.querySelector(".checkout-pay-btn");
+  const cryptoSelectContainer = document.getElementById("crypto-select-container");
 
   payCards.forEach(card => {
     card.addEventListener("click", () => {
@@ -3106,6 +3120,7 @@ function initCheckoutPage() {
 
       const method = card.getAttribute("data-method");
       if (method === "Binance Pay") {
+        if (cryptoSelectContainer) cryptoSelectContainer.style.display = "none";
         if (binanceContainer) binanceContainer.style.display = "flex";
         if (binanceInput) binanceInput.required = true;
         if (payBtn) {
@@ -3113,6 +3128,7 @@ function initCheckoutPage() {
           payBtn.classList.add("btn-whatsapp-green");
         }
       } else {
+        if (cryptoSelectContainer) cryptoSelectContainer.style.display = "flex";
         if (binanceContainer) binanceContainer.style.display = "none";
         if (binanceInput) {
           binanceInput.value = "";

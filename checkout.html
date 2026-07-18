@@ -296,7 +296,15 @@
                   <span class="payment-method-sub">Pay with your BinancePay</span>
                 </div>
 
-              </div>
+            </div>
+
+            <!-- Cryptocurrency Selector (Shown when Crypto Pay is active, hidden when Binance Pay is active) -->
+            <div class="checkout-input-group" id="crypto-select-container">
+              <label for="checkout-crypto-type" class="checkout-input-label">Choose Your Cryptocurrency</label>
+              <select id="checkout-crypto-type" class="checkout-text-input" style="background: rgba(0,0,0,0.25); color:#ffffff; border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:15px 18px; font-size:1rem; cursor:pointer; outline:none;">
+                <option value="USDT" style="background:#090909; color:#ffffff;">USDT</option>
+                <option value="USDC" style="background:#090909; color:#ffffff;">USDC</option>
+              </select>
             </div>
 
             <!-- Binance ID Field (Hidden by default, shown when Binance Pay is active) -->

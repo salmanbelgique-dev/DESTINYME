@@ -286,7 +286,7 @@
           
           <!-- Address Display & Copy Button -->
           <div class="checkout-input-group" style="margin-bottom: 24px;">
-            <label class="checkout-input-label" style="color:rgba(255,255,255,0.8); font-weight:bold; margin-bottom:8px; display:block;">USDT (TRC-20) Wallet Address</label>
+            <label id="wallet-label" class="checkout-input-label" style="color:rgba(255,255,255,0.8); font-weight:bold; margin-bottom:8px; display:block;">USDT (TRC-20) Wallet Address</label>
             <div style="display:flex; gap:10px;">
               <input type="text" id="wallet-address" class="checkout-text-input" value="TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9" readonly style="flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); color:#ffffff; font-family:monospace; font-size:0.95rem; text-align:center; border-radius:12px; padding:12px;">
               <button onclick="copyWalletAddress()" id="copy-btn" class="checkout-pay-btn" style="width:auto; padding:0 20px; border-radius:12px; font-weight:bold; cursor:pointer; background:#3b82f6; border:none; color:#ffffff; font-family:'Montserrat',sans-serif;">COPY</button>
@@ -403,6 +403,23 @@
       if (titleEl) titleEl.textContent = title;
       if (imgEl && img) imgEl.setAttribute("src", img);
       if (priceEl) priceEl.textContent = price;
+
+      // Dynamic Cryptocurrency Details Loading
+      const selectedCrypto = localStorage.getItem("checkout_crypto") || "USDT";
+      const walletLabelEl = document.getElementById("wallet-label");
+      const walletAddressEl = document.getElementById("wallet-address");
+      const qrCodeImgEl = document.getElementById("qr-code-img");
+
+      if (selectedCrypto === "USDC") {
+        if (walletLabelEl) walletLabelEl.textContent = "USDC (ERC-20) Wallet Address";
+        if (walletAddressEl) walletAddressEl.value = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+        if (qrCodeImgEl) qrCodeImgEl.setAttribute("src", "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=0x71C7656EC7ab88b098defB751B7401B5f6d8976F");
+      } else {
+        // Default to USDT
+        if (walletLabelEl) walletLabelEl.textContent = "USDT (TRC-20) Wallet Address";
+        if (walletAddressEl) walletAddressEl.value = "TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9";
+        if (qrCodeImgEl) qrCodeImgEl.setAttribute("src", "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9");
+      }
 
       // 3. Theme application for gold 96X versions (keep background blue)
       if (title && title.includes("96X")) {
