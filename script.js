@@ -3175,7 +3175,7 @@ function initCheckoutPage() {
       { name: "BEP20", val: "BEP20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" }
     ],
     USDC: [
-      { name: "SOL", val: "SOL", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" },
+      { name: "SOL", val: "SOL", img: "https://www.dropbox.com/scl/fi/7aew33cc90sdznyzcs5xb/Solana_logo.png?rlkey=bb925zzk1n9ynd70cywt9r61s&st=d1obmj5n&dl=1" },
       { name: "BEP20", val: "BEP20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" },
       { name: "SUI", val: "SUI", img: "https://www.dropbox.com/scl/fi/jdrg8yh9kyxuzgqohfygp/sui-7591eb35.png?rlkey=8wh36murd5na929r4rth3op4j&st=5zp8v8ek&dl=1" }
     ]
