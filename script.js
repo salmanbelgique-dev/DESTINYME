@@ -3171,11 +3171,11 @@ function initCheckoutPage() {
   const networksData = {
     USDT: [
       { name: "TRC20", val: "TRC20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/trx.png" },
-      { name: "ERC20", val: "ERC20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" },
+      { name: "APT", val: "APT", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/apt.png" },
       { name: "BEP20", val: "BEP20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" }
     ],
     USDC: [
-      { name: "ERC20", val: "ERC20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" },
+      { name: "APT", val: "APT", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/apt.png" },
       { name: "Solana", val: "Solana", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" },
       { name: "Base", val: "Base", img: "https://assets.coingecko.com/coins/images/33039/standard/base.png" }
     ]
