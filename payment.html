@@ -404,11 +404,9 @@
       if (imgEl && img) imgEl.setAttribute("src", img);
       if (priceEl) priceEl.textContent = price;
 
-      // 3. Theme application for gold 96X versions
+      // 3. Theme application for gold 96X versions (keep background blue)
       if (title && title.includes("96X")) {
-        const buyPageSec = document.getElementById("buy-page");
         const mainGrid = document.querySelector(".checkout-main-grid");
-        if (buyPageSec) buyPageSec.classList.add("theme-black-bg");
         if (mainGrid) mainGrid.classList.add("theme-gold-borders");
       }
 
