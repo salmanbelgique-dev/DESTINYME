@@ -300,11 +300,30 @@
 
             <!-- Cryptocurrency Selector (Shown when Crypto Pay is active, hidden when Binance Pay is active) -->
             <div class="checkout-input-group" id="crypto-select-container">
-              <label for="checkout-crypto-type" class="checkout-input-label">Choose Your Cryptocurrency</label>
-              <select id="checkout-crypto-type" class="checkout-text-input" style="background: rgba(0,0,0,0.25); color:#ffffff; border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:15px 18px; font-size:1rem; cursor:pointer; outline:none;">
-                <option value="USDT" style="background:#090909; color:#ffffff;">USDT</option>
-                <option value="USDC" style="background:#090909; color:#ffffff;">USDC</option>
-              </select>
+              <label class="checkout-input-label">Choose Your Cryptocurrency</label>
+              
+              <!-- Hidden input to hold the selected cryptocurrency for form submission -->
+              <input type="hidden" id="checkout-crypto-type" value="USDT">
+              
+              <div class="crypto-selector-grid">
+                <!-- USDT card -->
+                <div class="crypto-method-card active" data-crypto="USDT">
+                  <div class="crypto-method-icon-row">
+                    <img src="https://www.dropbox.com/scl/fi/lda0gtitqmw4se6z2qbmw/0xdac17f958d2ee523a2206206994597c13d831ec7.png?rlkey=73u4e78hzm17uli1hbc11xz88&st=kfhfmdo7&dl=1" class="crypto-icon" alt="USDT">
+                  </div>
+                  <span class="crypto-method-name">USDT</span>
+                  <span class="crypto-method-sub">Tether (TRC-20)</span>
+                </div>
+
+                <!-- USDC card -->
+                <div class="crypto-method-card" data-crypto="USDC">
+                  <div class="crypto-method-icon-row">
+                    <img src="https://www.dropbox.com/scl/fi/9ji8piq89ph4rz8y2lyvr/ed56241a5ef84c4682170faeff21f43f-removebg-preview.png?rlkey=xf5utex7c49sm5av6twqy1aoe&st=613pdd4w&dl=1" class="crypto-icon" alt="USDC">
+                  </div>
+                  <span class="crypto-method-name">USDC</span>
+                  <span class="crypto-method-sub">USD Coin (ERC-20)</span>
+                </div>
+              </div>
             </div>
 
             <!-- Binance ID Field (Hidden by default, shown when Binance Pay is active) -->

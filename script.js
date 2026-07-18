@@ -3141,6 +3141,22 @@ function initCheckoutPage() {
       }
     });
   });
+
+  // Handle cryptocurrency cards selection
+  const cryptoCards = document.querySelectorAll(".crypto-method-card");
+  const cryptoInput = document.getElementById("checkout-crypto-type");
+
+  if (cryptoCards && cryptoInput) {
+    cryptoCards.forEach(card => {
+      card.addEventListener("click", () => {
+        cryptoCards.forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+        
+        const selectedCrypto = card.getAttribute("data-crypto") || "USDT";
+        cryptoInput.value = selectedCrypto;
+      });
+    });
+  }
 }
 
 
