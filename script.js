@@ -3175,9 +3175,9 @@ function initCheckoutPage() {
       { name: "BEP20", val: "BEP20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" }
     ],
     USDC: [
-      { name: "APT", val: "APT", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/apt.png" },
-      { name: "Solana", val: "Solana", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" },
-      { name: "Base", val: "Base", img: "https://assets.coingecko.com/coins/images/33039/standard/base.png" }
+      { name: "SOL", val: "SOL", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" },
+      { name: "BEP20", val: "BEP20", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" },
+      { name: "SUI", val: "SUI", img: "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sui.png" }
     ]
   };
 

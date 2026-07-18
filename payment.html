@@ -426,15 +426,19 @@
           label = "USDT (TRC-20) Wallet Address";
         }
       } else if (selectedCrypto === "USDC") {
-        if (selectedNetwork === "Solana") {
+        if (selectedNetwork === "SOL" || selectedNetwork === "Solana") {
           address = "4k3DYwMw48Ph7Sru25Bgh2CJC146wN8M5G";
-          label = "USDC (Solana) Wallet Address";
-        } else if (selectedNetwork === "Base") {
+          label = "USDC (Solana Network) Wallet Address";
+        } else if (selectedNetwork === "BEP20") {
           address = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
-          label = "USDC (Base Network) Wallet Address";
+          label = "USDC (BEP-20) Wallet Address";
+        } else if (selectedNetwork === "SUI") {
+          address = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+          label = "USDC (Sui Network) Wallet Address";
         } else {
-          address = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
-          label = "USDC (Aptos Network) Wallet Address";
+          // Default fallback
+          address = "4k3DYwMw48Ph7Sru25Bgh2CJC146wN8M5G";
+          label = "USDC (Solana Network) Wallet Address";
         }
       }
 
