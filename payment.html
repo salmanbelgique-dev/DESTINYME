@@ -222,12 +222,12 @@
         <!-- Left Column: Product Info & Customer Details -->
         <div class="checkout-details-panel">
           <!-- Product Summary Preview (Extended big thumbnail stacked with title and price in center) -->
-          <div class="checkout-product-card-preview" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 24px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px;">
-            <div class="checkout-thumb-box" style="width: 220px; height: 220px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center;">
+          <div class="checkout-product-card-preview" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 24px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; margin: -32px -32px 0 -32px; width: calc(100% + 64px); overflow: hidden; border-top-left-radius: 24px; border-top-right-radius: 24px;">
+            <div class="checkout-thumb-box" style="width: 100%; aspect-ratio: 1400 / 670; overflow: hidden; border: none; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; border-radius: 0;">
               <img id="payment-prod-img" src="images/product_placeholder.png" alt="Product Thumbnail" class="checkout-preview-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
-            <div class="checkout-desc-box" style="display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;">
-              <h2 id="payment-prod-title" class="checkout-product-title-text" style="color:#ffffff; font-family:'Bangers', cursive; font-size:1.65rem; letter-spacing:1px; margin: 0; line-height: 1.3;">Lucky Premium Game</h2>
+            <div class="checkout-desc-box" style="display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; padding: 0 32px; box-sizing: border-box;">
+              <h2 id="payment-prod-title" class="checkout-product-title-text" style="color:#ffffff; font-family:'Bangers', cursive; font-size:1.8rem; letter-spacing:1px; margin: 0; line-height: 1.3;">Lucky Premium Game</h2>
               <div class="checkout-price-preview" style="display: flex; justify-content: center; align-items: center; gap: 8px;">
                 <span class="checkout-price-label" style="color: rgba(255,255,255,0.6); font-weight: 600; font-size: 1.1rem;">Price:</span>
                 <span id="payment-prod-price" class="checkout-price-value" style="color: #3b82f6; font-weight: 800; font-size: 1.6rem;">250$</span>
