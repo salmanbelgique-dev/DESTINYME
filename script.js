@@ -3153,8 +3153,7 @@ function initCheckoutPage() {
   if (selectTrigger && optionsContainer) {
     selectTrigger.addEventListener("click", (e) => {
       e.stopPropagation();
-      const isOpen = selectWrapper.classList.toggle("open");
-      optionsContainer.style.display = isOpen ? "flex" : "none";
+      selectWrapper.classList.toggle("open");
     });
 
     customOptions.forEach(option => {
@@ -3179,7 +3178,6 @@ function initCheckoutPage() {
 
         // Close dropdown
         selectWrapper.classList.remove("open");
-        optionsContainer.style.display = "none";
       });
     });
 
@@ -3187,7 +3185,6 @@ function initCheckoutPage() {
     document.addEventListener("click", (e) => {
       if (selectWrapper && !selectWrapper.contains(e.target)) {
         selectWrapper.classList.remove("open");
-        optionsContainer.style.display = "none";
       }
     });
   }

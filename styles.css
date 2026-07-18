@@ -5142,70 +5142,113 @@ html {
   line-height: 1.2;
 }
 
-/* Custom Cryptocurrency Selection Cards */
-.crypto-selector-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+/* Custom Select Dropdown Styling */
+.custom-select-wrapper {
+  position: relative;
   width: 100%;
 }
 
-.crypto-method-card {
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
-  padding: 20px 16px;
+.custom-select-trigger {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  gap: 8px;
+  justify-content: space-between;
+  width: 100%;
+  padding: 15px 18px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  color: #ffffff;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.crypto-method-card:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(59, 130, 246, 0.3);
-  transform: translateY(-2px);
+.custom-select-trigger:hover {
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
-.crypto-method-card.active {
-  background: rgba(59, 130, 246, 0.08) !important;
-  border-color: #3b82f6 !important;
-  box-shadow: 
-    0 10px 30px rgba(59, 130, 246, 0.15),
-    0 0 0 1px #3b82f6;
-  transform: translateY(-2px);
-}
-
-.crypto-method-icon-row {
+.selected-option-content {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: transparent;
+  gap: 12px;
 }
 
-.crypto-icon {
-  width: 48px;
-  height: 48px;
+.select-crypto-icon {
+  width: 24px;
+  height: 24px;
   object-fit: contain;
   border-radius: 50%;
 }
 
-.crypto-method-name {
-  font-size: 1rem;
-  font-weight: 700;
+.select-crypto-name {
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.custom-select-arrow {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.6);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-select-wrapper.open .custom-select-arrow {
+  transform: rotate(180deg);
+}
+
+.custom-options-container {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  background: rgba(9, 9, 9, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  overflow: hidden;
+  backdrop-filter: blur(15px);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  /* Smooth open/close transition */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-select-wrapper.open .custom-options-container {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.custom-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.custom-option:hover {
+  background: rgba(255, 255, 255, 0.05);
   color: #ffffff;
 }
 
-.crypto-method-sub {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.4);
-  line-height: 1.2;
+.custom-option.active {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
 }
 
 .checkout-summary-box {
