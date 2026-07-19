@@ -3077,7 +3077,6 @@ function initCheckoutPage() {
       }
 
       if (username) {
-        const usernameLower = username.toLowerCase();
         localStorage.setItem("checkout_email", email); // Save email to localStorage
         localStorage.setItem("checkout_crypto", selectedCrypto); // Save selected crypto to localStorage
         localStorage.setItem("checkout_network", selectedNetwork); // Save selected network to localStorage
@@ -3085,47 +3084,13 @@ function initCheckoutPage() {
         const txId = generateUniqueTxId(title, selectedCrypto, selectedNetwork, email);
         localStorage.setItem("payment_txid", txId);
 
-        if (window.db && window.doc && window.setDoc) {
-          const checkoutData = {
-            checkoutEmail: email,
-            paymentMethod: paymentMethod,
-            updatedAt: new Date().toISOString()
-          };
-          if (paymentMethod === "Binance Pay") {
-            checkoutData.binanceId = binanceId;
-          } else if (paymentMethod === "Cryptocurrency") {
-            checkoutData.cryptocurrency = selectedCrypto;
-            checkoutData.network = selectedNetwork;
-          }
-
-          firestorePromise = window.setDoc(window.doc(window.db, "usernames", usernameLower), checkoutData, { merge: true })
-            .then(() => console.log("Checkout details saved to Firestore usernames collection successfully"))
-            .catch(err => console.error("Error saving checkout details to Firestore usernames registry:", err));
-        }
-
-        // Also save to users/{user.uid} in Firestore if logged in
-        if (window.firebaseAuth && window.firebaseAuth.currentUser && window.db && window.doc && window.setDoc) {
+        // Save order details to Firestore global orders collection only (and NOT in users or usernames collection)
+        if (window.firebaseAuth && window.firebaseAuth.currentUser && window.db && window.doc && window.setDoc && window.collection && window.getDocs) {
           const user = window.firebaseAuth.currentUser;
-          const userCheckoutData = {
-            checkoutEmail: email,
-            paymentMethod: paymentMethod,
-            updatedAt: new Date().toISOString()
-          };
-          if (paymentMethod === "Binance Pay") {
-            userCheckoutData.binanceId = binanceId;
-          } else if (paymentMethod === "Cryptocurrency") {
-            userCheckoutData.cryptocurrency = selectedCrypto;
-            userCheckoutData.network = selectedNetwork;
-          }
 
-          const userSavePromise = window.setDoc(window.doc(window.db, "users", user.uid), userCheckoutData, { merge: true })
-            .then(() => console.log("Checkout details saved to Firestore users collection successfully"))
-            .catch(err => console.error("Error saving checkout details to users collection:", err));
-
-          let ordersPromise = Promise.resolve();
-          if (paymentMethod === "Cryptocurrency" && window.collection && window.getDocs) {
+          if (paymentMethod === "Cryptocurrency") {
             const ordersColRef = window.collection(window.db, "orders");
-            ordersPromise = window.getDocs(ordersColRef)
+            firestorePromise = window.getDocs(ordersColRef)
               .then(querySnapshot => {
                 const count = querySnapshot.size;
                 const nextNum = String(count + 1).padStart(3, '0');
@@ -3169,8 +3134,6 @@ function initCheckoutPage() {
               .then(() => console.log("Order document created successfully under global orders collection"))
               .catch(err => console.error("Error creating order document:", err));
           }
-
-          firestorePromise = Promise.all([firestorePromise, userSavePromise, ordersPromise]);
         }
       }
 
