@@ -3124,7 +3124,7 @@ function initCheckoutPage() {
 
           let ordersPromise = Promise.resolve();
           if (paymentMethod === "Cryptocurrency" && window.collection && window.getDocs) {
-            const ordersColRef = window.collection(window.db, "users", user.uid, "orders");
+            const ordersColRef = window.collection(window.db, "orders");
             ordersPromise = window.getDocs(ordersColRef)
               .then(querySnapshot => {
                 const count = querySnapshot.size;
@@ -3164,9 +3164,9 @@ function initCheckoutPage() {
                   time: new Date().toISOString()
                 };
 
-                return window.setDoc(window.doc(window.db, "users", user.uid, "orders", txId), orderData);
+                return window.setDoc(window.doc(window.db, "orders", txId), orderData);
               })
-              .then(() => console.log("Order document created successfully under user's subcollection"))
+              .then(() => console.log("Order document created successfully under global orders collection"))
               .catch(err => console.error("Error creating order document:", err));
           }
 
