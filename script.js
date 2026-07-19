@@ -3062,11 +3062,28 @@ function initCheckoutPage() {
       const username = localStorage.getItem("profileName");
       let firestorePromise = Promise.resolve();
 
+      // Helper function to generate unique deterministic transaction ID
+      function generateUniqueTxId(item, crypto, network, userEmail) {
+        const input = (item + crypto + network + userEmail).toLowerCase();
+        let hash = 5381;
+        for (let i = 0; i < input.length; i++) {
+          hash = (hash * 33) ^ input.charCodeAt(i);
+        }
+        let hashStr = Math.abs(hash).toString(36).toUpperCase();
+        while (hashStr.length < 5) {
+          hashStr += "X";
+        }
+        return hashStr.substring(0, 5);
+      }
+
       if (username) {
         const usernameLower = username.toLowerCase();
         localStorage.setItem("checkout_email", email); // Save email to localStorage
         localStorage.setItem("checkout_crypto", selectedCrypto); // Save selected crypto to localStorage
         localStorage.setItem("checkout_network", selectedNetwork); // Save selected network to localStorage
+
+        const txId = generateUniqueTxId(title, selectedCrypto, selectedNetwork, email);
+        localStorage.setItem("payment_txid", txId);
 
         if (window.db && window.doc && window.setDoc) {
           const checkoutData = {
@@ -3100,9 +3117,60 @@ function initCheckoutPage() {
             userCheckoutData.cryptocurrency = selectedCrypto;
             userCheckoutData.network = selectedNetwork;
           }
-          window.setDoc(window.doc(window.db, "users", user.uid), userCheckoutData, { merge: true })
+
+          const userSavePromise = window.setDoc(window.doc(window.db, "users", user.uid), userCheckoutData, { merge: true })
             .then(() => console.log("Checkout details saved to Firestore users collection successfully"))
             .catch(err => console.error("Error saving checkout details to users collection:", err));
+
+          let ordersPromise = Promise.resolve();
+          if (paymentMethod === "Cryptocurrency" && window.collection && window.getDocs) {
+            const ordersColRef = window.collection(window.db, "users", user.uid, "orders");
+            ordersPromise = window.getDocs(ordersColRef)
+              .then(querySnapshot => {
+                const count = querySnapshot.size;
+                const nextNum = String(count + 1).padStart(3, '0');
+                const seqOrderId = `DSR${nextNum}`;
+
+                function getWalletAddress(crypto, network) {
+                  if (crypto === "USDT") {
+                    if (network === "APT" || network === "BEP20") {
+                      return "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+                    }
+                    return "TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9";
+                  } else if (crypto === "USDC") {
+                    if (network === "BEP20" || network === "SUI") {
+                      return "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+                    }
+                    return "4k3DYwMw48Ph7Sru25Bgh2CJC146wN8M5G";
+                  }
+                  return "";
+                }
+
+                const walletAddr = getWalletAddress(selectedCrypto, selectedNetwork);
+                const rawPrice = price || "6$";
+                const amountVal = parseFloat(rawPrice.replace(/[^0-9.]/g, "")) || 6;
+
+                const orderData = {
+                  orderId: seqOrderId,
+                  email: user.email || "",
+                  "delivered email": email,
+                  product: title || "Lucky Premium Game",
+                  amount: amountVal,
+                  currency: selectedCrypto,
+                  network: selectedNetwork,
+                  status: "pending",
+                  wallet: walletAddr,
+                  "transaction id": txId,
+                  time: new Date().toISOString()
+                };
+
+                return window.setDoc(window.doc(window.db, "users", user.uid, "orders", txId), orderData);
+              })
+              .then(() => console.log("Order document created successfully under user's subcollection"))
+              .catch(err => console.error("Error creating order document:", err));
+          }
+
+          firestorePromise = Promise.all([firestorePromise, userSavePromise, ordersPromise]);
         }
       }
 

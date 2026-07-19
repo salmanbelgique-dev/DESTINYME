@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, updateProfile } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "firebase/firestore";
 import { getDatabase, ref, set, get } from "firebase/database";
 
 // Your web app's Firebase configuration
@@ -45,6 +45,8 @@ window.db = db;
 window.doc = doc;
 window.setDoc = setDoc;
 window.getDoc = getDoc;
+window.collection = collection;
+window.getDocs = getDocs;
 window.rtdb = rtdb;
 window.rtdbRef = ref;
 window.rtdbSet = set;
