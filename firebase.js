@@ -12,8 +12,8 @@ const isLocalhost = window.location.hostname === "localhost" || window.location.
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOCEyQN4zcZyNTWhO9-mN1-sBxM3RSywI",
-  // Reverted to default to fix redirect_uri_mismatch error
-  authDomain: "destiny-rewards-f3a5d.firebaseapp.com",
+  // Use Vercel proxy for custom domain popup, fallback to default for local dev
+  authDomain: isLocalhost ? "destiny-rewards-f3a5d.firebaseapp.com" : "destinyrewards.store",
   projectId: "destiny-rewards-f3a5d",
   storageBucket: "destiny-rewards-f3a5d.firebasestorage.app",
   messagingSenderId: "650427918746",
