@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initImageFadeIn();
   initPurchaseButtons();
   initCheckoutPage();
+  initDebugPanel();
 });
 
 /* ==========================================================================
@@ -3060,11 +3061,34 @@ function initCheckoutPage() {
 
       // Save to Firestore under usernames/{username} (merging with existing fields like userId)
       const username = localStorage.getItem("profileName");
-      let firestorePromise = Promise.resolve();
 
-      // Helper function to generate unique deterministic transaction ID
+      // Helper function to get current user with potential waiting
+      function getAuthenticatedUser() {
+        return new Promise((resolve) => {
+          if (!window.firebaseAuth) {
+            resolve(null);
+            return;
+          }
+          if (window.firebaseAuth.currentUser) {
+            resolve(window.firebaseAuth.currentUser);
+            return;
+          }
+          if (typeof window.onAuthStateChanged === "function") {
+            const unsubscribe = window.onAuthStateChanged(window.firebaseAuth, (user) => {
+              unsubscribe();
+              resolve(user);
+            });
+            setTimeout(() => resolve(window.firebaseAuth.currentUser), 3000);
+          } else {
+            resolve(null);
+          }
+        });
+      }
+
+      // Helper function to generate unique deterministic transaction ID (with random salt for absolute uniqueness per checkout)
       function generateUniqueTxId(item, crypto, network, userEmail) {
-        const input = (item + crypto + network + userEmail).toLowerCase();
+        const randomSalt = Math.floor(Math.random() * 1000000);
+        const input = (item + crypto + network + userEmail + Date.now() + randomSalt).toLowerCase();
         let hash = 5381;
         for (let i = 0; i < input.length; i++) {
           hash = (hash * 33) ^ input.charCodeAt(i);
@@ -3084,65 +3108,129 @@ function initCheckoutPage() {
         const txId = generateUniqueTxId(title, selectedCrypto, selectedNetwork, email);
         localStorage.setItem("payment_txid", txId);
 
-        // Save order details to Firestore global orders collection only (and NOT in users or usernames collection)
-        if (window.firebaseAuth && window.firebaseAuth.currentUser && window.db && window.doc && window.setDoc && window.collection && window.getDocs) {
-          const user = window.firebaseAuth.currentUser;
+        const debugAct = document.getElementById("debug-last-action");
+        if (debugAct) debugAct.innerHTML = "Last Action: <span style='color: #6b8aff'>Verifying session...</span>";
+
+        getAuthenticatedUser().then(user => {
+          if (!user) {
+            if (debugAct) debugAct.innerHTML = "Last Action: <span style='color: #ff5555'>Auth Failed (No User)</span>";
+            alert("Your login session could not be verified by Firebase. Please click the profile avatar on the top right to sign in again.");
+            showGoogleLogin();
+            return;
+          }
+
+          if (debugAct) debugAct.innerHTML = "Last Action: <span style='color: #6b8aff'>Writing document...</span>";
+          let firestorePromise = Promise.resolve();
+
+          // Save order details to Firestore global orders collection only (and NOT in users or usernames collection)
+          if (window.db && window.doc && window.setDoc) {
+            if (paymentMethod === "Cryptocurrency") {
+              function getWalletAddress(crypto, network) {
+                if (crypto === "USDT") {
+                  if (network === "APT" || network === "BEP20") {
+                    return "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+                  }
+                  return "TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9";
+                } else if (crypto === "USDC") {
+                  if (network === "BEP20" || network === "SUI") {
+                    return "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+                  }
+                  return "4k3DYwMw48Ph7Sru25Bgh2CJC146wN8M5G";
+                }
+                return "";
+              }
+
+              const walletAddr = getWalletAddress(selectedCrypto, selectedNetwork);
+              const rawPrice = price || "6$";
+              const amountVal = parseFloat(rawPrice.replace(/[^0-9.]/g, "")) || 6;
+              const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+              const seqOrderId = `DSR${randomSuffix}`;
+
+              const orderData = {
+                orderId: seqOrderId,
+                email: user.email || "",
+                "delivered email": email,
+                product: title || "Lucky Premium Game",
+                amount: amountVal,
+                currency: selectedCrypto,
+                network: selectedNetwork,
+                status: "pending",
+                wallet: walletAddr,
+                "transaction id": txId,
+                time: new Date().toISOString()
+              };
+
+              firestorePromise = window.setDoc(window.doc(window.db, "orders", txId), orderData)
+                .then(() => {
+                  console.log("Order document created successfully under global orders collection");
+                  if (debugAct) debugAct.innerHTML = "Last Action: <span style='color: #25d366'>SUCCESS (Created order: " + txId + ")</span>";
+                })
+                .catch(err => {
+                  console.error("Error creating order document:", err);
+                  if (debugAct) debugAct.innerHTML = "Last Action: <span style='color: #ff5555'>WRITE FAILED (" + err.code + ")</span>";
+                  alert("Failed to register your order in the database: " + err.message);
+                  throw err; // Stop promise chain to prevent redirect
+                });
+            } else if (paymentMethod === "Binance Pay") {
+              const rawPrice = price || "6$";
+              const amountVal = parseFloat(rawPrice.replace(/[^0-9.]/g, "")) || 6;
+              const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+              const seqOrderId = `DSR${randomSuffix}`;
+
+              const orderData = {
+                orderId: seqOrderId,
+                email: user.email || "",
+                "delivered email": email,
+                product: title || "Lucky Premium Game",
+                amount: amountVal,
+                currency: "USD",
+                network: "Binance Pay",
+                status: "pending",
+                wallet: binanceId,
+                "transaction id": txId,
+                time: new Date().toISOString()
+              };
+
+              firestorePromise = window.setDoc(window.doc(window.db, "orders", txId), orderData)
+                .then(() => {
+                  console.log("Binance Pay order document created successfully");
+                  if (debugAct) debugAct.innerHTML = "Last Action: <span style='color: #25d366'>SUCCESS (Created Binance Pay: " + txId + ")</span>";
+                })
+                .catch(err => {
+                  console.error("Error creating Binance Pay order document:", err);
+                  if (debugAct) debugAct.innerHTML = "Last Action: <span style='color: #ff5555'>WRITE FAILED (" + err.code + ")</span>";
+                  alert("Failed to register your order in the database: " + err.message);
+                  throw err; // Stop promise chain to prevent redirect
+                });
+            }
+          } else {
+            console.error("Firebase Firestore is not initialized! (window.db, window.doc, or window.setDoc is undefined)");
+            if (debugAct) debugAct.innerHTML = "Last Action: <span style='color: #ff5555'>Firebase Not Initialized</span>";
+            alert("Database Error: Firebase Firestore is not initialized.\n\nIf you opened the HTML file directly (with double-click showing file:/// in the address bar), browser security blocks Firebase ES modules from loading. Please run the project using a local web server (e.g. node server.js) and visit http://localhost:3000 in your browser instead.");
+            return; // Stop execution
+          }
 
           if (paymentMethod === "Cryptocurrency") {
-            const ordersColRef = window.collection(window.db, "orders");
-            firestorePromise = window.getDocs(ordersColRef)
-              .then(querySnapshot => {
-                const count = querySnapshot.size;
-                const nextNum = String(count + 1).padStart(3, '0');
-                const seqOrderId = `DSR${nextNum}`;
-
-                function getWalletAddress(crypto, network) {
-                  if (crypto === "USDT") {
-                    if (network === "APT" || network === "BEP20") {
-                      return "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
-                    }
-                    return "TY1xP8G6uA9zH8GfM8D9vT8C8sP7W8q4k9";
-                  } else if (crypto === "USDC") {
-                    if (network === "BEP20" || network === "SUI") {
-                      return "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
-                    }
-                    return "4k3DYwMw48Ph7Sru25Bgh2CJC146wN8M5G";
-                  }
-                  return "";
-                }
-
-                const walletAddr = getWalletAddress(selectedCrypto, selectedNetwork);
-                const rawPrice = price || "6$";
-                const amountVal = parseFloat(rawPrice.replace(/[^0-9.]/g, "")) || 6;
-
-                const orderData = {
-                  orderId: seqOrderId,
-                  email: user.email || "",
-                  "delivered email": email,
-                  product: title || "Lucky Premium Game",
-                  amount: amountVal,
-                  currency: selectedCrypto,
-                  network: selectedNetwork,
-                  status: "pending",
-                  wallet: walletAddr,
-                  "transaction id": txId,
-                  time: new Date().toISOString()
-                };
-
-                return window.setDoc(window.doc(window.db, "orders", txId), orderData);
-              })
-              .then(() => console.log("Order document created successfully under global orders collection"))
-              .catch(err => console.error("Error creating order document:", err));
+            firestorePromise.then(() => {
+              // Only redirect if database write was attempted and succeeded
+              if (window.db && window.doc && window.setDoc) {
+                setTimeout(() => {
+                  window.location.href = "payment.html";
+                }, 1500); // 1.5s delay to let them see success in debug box
+              } else {
+                window.location.href = "payment.html";
+              }
+            }).catch(err => {
+              console.log("Checkout halted due to database write failure.", err);
+            });
+          } else {
+            firestorePromise.then(() => {
+              alert(detailsMsg);
+            }).catch(err => {
+              console.log("Checkout halted due to database write failure.", err);
+            });
           }
-        }
-      }
-
-      if (paymentMethod === "Cryptocurrency") {
-        firestorePromise.then(() => {
-          window.location.href = "payment.html";
         });
-      } else {
-        alert(detailsMsg);
       }
     });
   }
@@ -3329,6 +3417,47 @@ function initCheckoutPage() {
       networkWrapper.classList.remove("open");
     }
   });
+}
+
+// Floating Diagnostic Debug Widget
+function initDebugPanel() {
+  const isLocalFile = window.location.protocol === 'file:';
+  const isFirebaseLoaded = !!(window.db && window.doc && window.setDoc);
+  const isLoggedIn = localStorage.getItem("profileIsLoggedIn") === "true";
+  const profileName = localStorage.getItem("profileName") || "null";
+  const checkoutFormExists = !!document.getElementById("checkout-form");
+
+  const debugDiv = document.createElement("div");
+  debugDiv.id = "antigravity-debug-panel";
+  debugDiv.style.position = "fixed";
+  debugDiv.style.bottom = "10px";
+  debugDiv.style.right = "10px";
+  debugDiv.style.zIndex = "999999";
+  debugDiv.style.background = "rgba(0, 0, 0, 0.9)";
+  debugDiv.style.border = "2px solid #3b82f6";
+  debugDiv.style.borderRadius = "8px";
+  debugDiv.style.padding = "12px";
+  debugDiv.style.color = "#ffffff";
+  debugDiv.style.fontFamily = "monospace";
+  debugDiv.style.fontSize = "12px";
+  debugDiv.style.boxShadow = "0 4px 10px rgba(0,0,0,0.5)";
+  debugDiv.style.width = "300px";
+
+  debugDiv.innerHTML = `
+    <div style="font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #3b82f6; padding-bottom: 4px; display: flex; justify-content: space-between;">
+      <span>Checkout Diagnostic Panel</span>
+      <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: #ff5555; cursor: pointer; font-weight: bold;">[X]</button>
+    </div>
+    <div style="margin-bottom: 4px;">Protocol: <span style="color: ${isLocalFile ? '#ff5555' : '#25d366'}">${window.location.protocol}</span> ${isLocalFile ? '<b>(CORS BLOCKED!)</b>' : ''}</div>
+    <div style="margin-bottom: 4px;">Firebase SDK: <span style="color: ${isFirebaseLoaded ? '#25d366' : '#ff5555'}">${isFirebaseLoaded ? 'INITIALIZED' : 'NOT INITIALIZED'}</span></div>
+    <div style="margin-bottom: 4px;">User logged-in: <span style="color: ${isLoggedIn ? '#25d366' : '#ff5555'}">${isLoggedIn ? 'YES' : 'NO'}</span></div>
+    <div style="margin-bottom: 4px;">Username: <span style="color: #6b8aff">${profileName}</span></div>
+    <div style="margin-bottom: 4px;">Checkout Form: <span style="color: ${checkoutFormExists ? '#25d366' : '#ff5555'}">${checkoutFormExists ? 'FOUND' : 'NOT FOUND'}</span></div>
+    <div id="debug-last-action" style="margin-top: 8px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 6px; color: #ffea00; font-size: 11px;">
+      Last Action: None
+    </div>
+  `;
+  document.body.appendChild(debugDiv);
 }
 
 

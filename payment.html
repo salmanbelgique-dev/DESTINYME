@@ -135,9 +135,9 @@
     }
   </script>
   <!-- Firebase Initialization -->
-  <script src="firebase.js?v=105" type="module"></script>
+  <script src="firebase.js?v=114" type="module"></script>
   <!-- JavaScript -->
-  <script src="script.js?v=105" defer></script>
+  <script src="script.js?v=114" defer></script>
 </head>
 
 <body class="buy-page-body">
@@ -473,14 +473,18 @@
         }
         return hashStr.substring(0, 5);
       }
+      const urlParams = new URLSearchParams(window.location.search);
+      let txId = urlParams.get("txid") || localStorage.getItem("payment_txid");
 
-      const txId = generateUniqueTxId(title, selectedCrypto, selectedNetwork, email);
-      localStorage.setItem("payment_txid", txId);
+      if (!txId) {
+        txId = generateUniqueTxId(title, selectedCrypto, selectedNetwork, email);
+        localStorage.setItem("payment_txid", txId);
+      }
+
       const txidEl = document.getElementById("payment-txid");
       if (txidEl) txidEl.textContent = txId;
 
       // Append transaction number to the link/URL query parameters if not already present
-      const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get("txid") !== txId) {
         urlParams.set("txid", txId);
         const newUrl = window.location.pathname + '?' + urlParams.toString() + window.location.hash;

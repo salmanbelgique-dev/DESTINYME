@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 1. Rule for usernames (Allows checking & registering usernames)
+    match /usernames/{username} {
+      allow read, write: if true;
+    }
+    
+    // 2. Rule for users collection (Syncing profiles)
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // 3. Rule for orders collection (Secure checkouts & get details allowed)
+    match /orders/{orderId} {
+      allow create: if true;
+      allow get: if true;
+
+      // Nobody can modify or delete orders from the browser
+      allow update: if false;
+      allow delete: if false;
+      allow list: if false;
+    }
+  }
+}
